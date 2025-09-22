@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Machine Learning Test - 400 Questions</title>
+    <title>اختبار التعلم الآلي - 400 سؤال</title>
     <style>
+        /* جميع الأنماط الموجودة في الكود الأصلي */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -12,13 +13,31 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
+        :root {
+            --primary-color: #2575fc;
+            --secondary-color: #6a11cb;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --light-bg: #f5f7fa;
+            --dark-bg: #1a1a2e;
+            --text-light: #333;
+            --text-dark: #f5f7fa;
+        }
+        
         body {
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            color: #333;
+            color: var(--text-light);
             line-height: 1.6;
             padding: 20px;
             overflow-x: hidden;
             min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
+        
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: var(--text-dark);
         }
         
         .container {
@@ -29,46 +48,188 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             overflow: hidden;
             position: relative;
+            transition: background-color 0.3s;
         }
         
-        header {
+        body.dark-mode .container {
+            background-color: var(--dark-bg);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* شريط الأدوات العلوي */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: white;
-            padding: 25px;
+        }
+        
+        .toolbar-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .toolbar-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .toolbar-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* شاشة الترحيب */
+        .welcome-screen {
+            padding: 40px;
             text-align: center;
-            position: relative;
-            overflow: hidden;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
         }
         
-        header::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%);
-            transform: rotate(30deg);
+        .welcome-title {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
         
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            position: relative;
-        }
-        
-        .description {
-            font-size: 1.1rem;
+        .welcome-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
             opacity: 0.9;
-            position: relative;
         }
         
+        .batch-info {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+        }
+        
+        .welcome-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .welcome-btn {
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #2575fc;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .welcome-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            background: white;
+        }
+        
+        /* إعدادات الاختبار */
+        .test-settings {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        body.dark-mode .test-settings {
+            background: #2d3748;
+        }
+        
+        .settings-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .settings-options {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .setting-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* شاشة صنع الاختبار العشوائي */
+        .custom-test-container {
+            padding: 30px;
+            text-align: center;
+            display: none;
+        }
+        
+        .custom-test-title {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .custom-test-form {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        body.dark-mode .custom-test-form {
+            background: #2d3748;
+        }
+        
+        .custom-test-input {
+            padding: 15px;
+            font-size: 1.2rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            width: 200px;
+            text-align: center;
+            margin: 0 10px 20px;
+        }
+        
+        .custom-test-info {
+            margin-top: 20px;
+            color: #6c757d;
+            font-size: 1rem;
+        }
+        
+        /* قسم المحاضرات */
         .lecture-selection {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 15px;
             padding: 20px;
             background-color: #f8f9fa;
+            display: none;
+        }
+        
+        body.dark-mode .lecture-selection {
+            background-color: #2d3748;
         }
         
         .lecture-btn {
@@ -107,6 +268,7 @@
             background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
         }
         
+        /* منطقة الامتحان */
         .exam-container {
             display: none;
             padding: 20px;
@@ -123,11 +285,16 @@
             gap: 10px;
         }
         
-        .lecture-title {
-            font-size: 1.8rem;
-            color: #2575fc;
+        body.dark-mode .exam-header {
+            border-bottom: 2px solid #4a5568;
         }
         
+        .lecture-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+        
+        /* شريط التقدم */
         .progress-container {
             width: 100%;
             background-color: #e9ecef;
@@ -135,6 +302,11 @@
             margin-bottom: 20px;
             overflow: hidden;
             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        body.dark-mode .progress-container {
+            background-color: #4a5568;
         }
         
         .progress-bar {
@@ -144,18 +316,6 @@
             width: 0%;
             transition: width 0.5s ease;
             position: relative;
-        }
-        
-        .progress-bar::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            background-image: linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
-            background-size: 10px 10px;
-            border-radius: 10px;
         }
         
         .progress-text {
@@ -168,6 +328,15 @@
             align-items: center;
         }
         
+        body.dark-mode .progress-text {
+            color: #a0aec0;
+        }
+        
+        .progress-percentage {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
         .timer {
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: white;
@@ -176,6 +345,18 @@
             font-weight: bold;
         }
         
+        .timer.warning {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* منطقة السؤال */
         .question-container {
             background-color: white;
             padding: 25px;
@@ -186,19 +367,17 @@
             overflow: hidden;
         }
         
+        body.dark-mode .question-container {
+            background-color: #2d3748;
+        }
+        
         .question-number {
             font-size: 1.2rem;
             font-weight: bold;
-            color: #2575fc;
+            color: var(--primary-color);
             margin-bottom: 10px;
             display: flex;
             align-items: center;
-        }
-        
-        .question-number::before {
-            content: "•";
-            margin-right: 5px;
-            color: #6a11cb;
         }
         
         .question-text {
@@ -206,6 +385,10 @@
             margin-bottom: 25px;
             line-height: 1.6;
             color: #2d3748;
+        }
+        
+        body.dark-mode .question-text {
+            color: #e2e8f0;
         }
         
         .options-container {
@@ -224,10 +407,38 @@
             position: relative;
         }
         
+        body.dark-mode .option {
+            border: 2px solid #4a5568;
+        }
+        
         .option:hover {
-            border-color: #2575fc;
+            border-color: var(--primary-color);
             background-color: #f8f9fa;
             transform: translateX(5px);
+        }
+        
+        body.dark-mode .option:hover {
+            background-color: #4a5568;
+        }
+        
+        .option.correct {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        
+        body.dark-mode .option.correct {
+            background-color: #2d5a2d;
+            border-color: #3a6b3a;
+        }
+        
+        .option.incorrect {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        
+        body.dark-mode .option.incorrect {
+            background-color: #5a2d2d;
+            border-color: #6b3a3a;
         }
         
         .option input {
@@ -237,8 +448,13 @@
         .option-label {
             font-weight: bold;
             margin-right: 10px;
-            color: #2575fc;
+            color: var(--primary-color);
             min-width: 25px;
+        }
+        
+        .option-feedback {
+            margin-right: 10px;
+            font-size: 1.2rem;
         }
         
         .feedback {
@@ -257,10 +473,20 @@
             border: 1px solid #c3e6cb;
         }
         
+        body.dark-mode .feedback.correct {
+            background-color: #2d5a2d;
+            color: #c8e6c9;
+        }
+        
         .feedback.incorrect {
             background-color: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
+        }
+        
+        body.dark-mode .feedback.incorrect {
+            background-color: #5a2d2d;
+            color: #ffcdd2;
         }
         
         .navigation {
@@ -306,6 +532,7 @@
             color: #721c24;
         }
         
+        /* شاشة النتائج */
         .results-container {
             background-color: white;
             padding: 30px;
@@ -317,10 +544,14 @@
             animation: fadeIn 0.5s ease;
         }
         
+        body.dark-mode .results-container {
+            background-color: #2d3748;
+        }
+        
         .score {
             font-size: 2.5rem;
             font-weight: bold;
-            color: #2575fc;
+            color: var(--primary-color);
             margin: 20px 0;
             position: relative;
             display: inline-block;
@@ -344,6 +575,10 @@
             color: #6c757d;
         }
         
+        body.dark-mode .score-text {
+            color: #a0aec0;
+        }
+        
         .stats {
             display: flex;
             justify-content: space-around;
@@ -360,10 +595,14 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
         
+        body.dark-mode .stat-item {
+            background: #4a5568;
+        }
+        
         .stat-value {
             font-size: 1.8rem;
             font-weight: bold;
-            color: #2575fc;
+            color: var(--primary-color);
         }
         
         .stat-label {
@@ -371,7 +610,278 @@
             color: #6c757d;
         }
         
-        /* Visual effects */
+        body.dark-mode .stat-label {
+            color: #a0aec0;
+        }
+        
+        /* لوحة الإنجازات */
+        .achievements-panel {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        body.dark-mode .achievements-panel {
+            background: #4a5568;
+        }
+        
+        .achievements-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .achievement {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        body.dark-mode .achievement {
+            background: #2d3748;
+        }
+        
+        .achievement.unlocked {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            transform: scale(1.05);
+        }
+        
+        body.dark-mode .achievement.unlocked {
+            background: linear-gradient(135deg, #2d5a2d 0%, #3a6b3a 100%);
+        }
+        
+        .achievement-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .achievement-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .achievement-desc {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        body.dark-mode .achievement-desc {
+            color: #a0aec0;
+        }
+        
+        /* مراجعة الأسئلة */
+        .review-panel {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        body.dark-mode .review-panel {
+            background: #4a5568;
+        }
+        
+        .review-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .review-questions {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .review-question {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        body.dark-mode .review-question {
+            background: #2d3748;
+        }
+        
+        .review-question.correct {
+            border-left: 5px solid var(--success-color);
+        }
+        
+        .review-question.incorrect {
+            border-left: 5px solid var(--danger-color);
+        }
+        
+        .review-question-text {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .review-answer {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        
+        .answer-label {
+            font-weight: bold;
+            min-width: 100px;
+        }
+        
+        .answer-correct {
+            color: var(--success-color);
+        }
+        
+        .answer-user {
+            color: var(--danger-color);
+        }
+        
+        /* QR code */
+        .qr-code-container {
+            margin: 20px 0;
+            text-align: center;
+            display: none;
+        }
+        
+        .qr-code {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        
+        /* Leaderboard */
+        .leaderboard {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        body.dark-mode .leaderboard {
+            background: #4a5568;
+        }
+        
+        .leaderboard-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .leaderboard-list {
+            list-style: none;
+        }
+        
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        body.dark-mode .leaderboard-item {
+            border-bottom: 1px solid #4a5568;
+        }
+        
+        .leaderboard-item:last-child {
+            border-bottom: none;
+        }
+        
+        .leaderboard-rank {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        /* أنماط محسنة للاختبار العشوائي */
+        .test-configuration {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode .test-configuration {
+            background: #2d3748;
+        }
+
+        .config-section {
+            margin-bottom: 20px;
+        }
+
+        .config-section label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .lecture-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+        }
+
+        body.dark-mode .lecture-checkboxes {
+            border-color: #4a5568;
+        }
+
+        .lecture-checkboxes label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        .selection-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .selection-btn {
+            padding: 8px 15px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .selection-btn:hover {
+            opacity: 0.9;
+        }
+                
+        /* PDF Export */
+        .pdf-export {
+            margin: 20px 0;
+            text-align: center;
+            display: none;
+        }
+        
+        /* تأثيرات بصرية */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -381,53 +891,6 @@
             0%, 100% { transform: translateX(0); }
             10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
             20%, 40%, 60%, 80% { transform: translateX(10px); }
-        }
-        
-        @keyframes fireworks {
-            0% { transform: translate(-50%, 60vh); width: 0.5vmin; opacity: 1; }
-            50% { width: 0.5vmin; opacity: 1; }
-            100% { width: 45vmin; opacity: 0; }
-        }
-        
-        .firework {
-            position: fixed;
-            opacity: 0;
-            z-index: 1000;
-        }
-        
-        .firework::before, .firework::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 5px;
-            background: linear-gradient(45deg, #4facfe, #00f2fe, #fad0c4, #ff9a9e);
-            border-radius: 50%;
-            animation: fireworks 1s ease-out forwards;
-        }
-        
-        .correct-answer {
-            animation: correctPulse 0.5s ease;
-            background-color: #d4edda !important;
-            border-color: #c3e6cb !important;
-        }
-        
-        .incorrect-answer {
-            animation: shake 0.5s ease, incorrectPulse 0.5s ease;
-            background-color: #f8d7da !important;
-            border-color: #f5c6cb !important;
-        }
-        
-        @keyframes correctPulse {
-            0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); }
-            70% { box-shadow: 0 0 0 20px rgba(40, 167, 69, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
-        }
-        
-        @keyframes incorrectPulse {
-            0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4); }
-            70% { box-shadow: 0 0 0 20px rgba(220, 53, 69, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
         }
         
         .confetti {
@@ -445,20 +908,34 @@
             100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
         }
         
-        /* Achievement badge */
-        .badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
-            color: #721c24;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            margin-top: 10px;
-            animation: fadeIn 1s ease;
-        }
-        
+        /* وسائط متجاوبة */
         @media (max-width: 768px) {
+
+
+            .about-us-content {
+                padding: 20px;
+            }
+            
+            .about-us-title {
+                font-size: 2rem;
+            }
+            
+            .thanks-section h3 {
+                font-size: 1.3rem;
+            }
+            
+            .lecture-checkboxes {
+                grid-template-columns: 1fr;
+                max-height: 150px;
+            }
+            
+            .selection-actions {
+                flex-direction: column;
+            }
+        
+
+
+
             .lecture-selection {
                 grid-template-columns: 1fr;
             }
@@ -489,110 +966,445 @@
                 flex-direction: column;
                 align-items: center;
             }
+            
+            .welcome-title {
+                font-size: 2.5rem;
+            }
+            
+            .welcome-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .welcome-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .welcome-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .toolbar {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .toolbar-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* إضافة أنماط جديدة */
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            color: #721c24;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 10px 0;
+            animation: pulse 1s infinite;
+        }
+        
+        .share-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .share-btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .firework {
+            position: fixed;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            animation: fireworkExplode 1s ease-out forwards;
+        }
+        
+        @keyframes fireworkExplode {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(20); opacity: 0; }
+        }
+        
+        .stats-chart {
+            width: 100%;
+            height: 200px;
+            margin: 20px 0;
+        }
+        
+        .correct-answer {
+            background-color: #d4edda !important;
+            border-color: #c3e6cb !important;
+        }
+        
+        .incorrect-answer {
+            background-color: #f8d7da !important;
+            border-color: #f5c6cb !important;
+        }
+        
+        body.dark-mode .correct-answer {
+            background-color: #2d5a2d !important;
+            border-color: #3a6b3a !important;
+        }
+        
+        body.dark-mode .incorrect-answer {
+            background-color: #5a2d2d !important;
+            border-color: #6b3a3a !important;
+        }
+
+                /* أنماط قسم About Us */
+        .about-us-container {
+            padding: 40px;
+            text-align: center;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .about-us-content {
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .about-us-title {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .thanks-section {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .thanks-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .contributors-list, .designers-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .contributors-list li, .designers-list li {
+            padding: 8px 0;
+            font-size: 1.1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .contributors-list li:last-child, .designers-list li:last-child {
+            border-bottom: none;
+        }
+
+        body.dark-mode .about-us-container {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+                /* تعديلات لعرض الأسئلة من اليسار إلى اليمين */
+        .question-text,
+        .options-container,
+        .option,
+        .feedback,
+        .review-question-text,
+        .review-answer,
+        .achievement-name,
+        .achievement-desc,
+        .stat-value,
+        .stat-label,
+        .leaderboard-item,
+        .score,
+        .score-text {
+            direction: ltr;
+            text-align: left;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Machine Learning Test</h1>
-            <p class="description">Comprehensive test containing 400 machine learning questions</p>
-        </header>
-        
-        <div class="lecture-selection" id="lecture-selection">
-            <button class="lecture-btn" data-lecture="1">Lecture 1 (1-40)</button>
-            <button class="lecture-btn" data-lecture="2">Lecture 2 (41-73)</button>
-            <button class="lecture-btn" data-lecture="3">Lecture 3 (74-112)</button>
-            <button class="lecture-btn" data-lecture="4">Lecture 4 (113-151)</button>
-            <button class="lecture-btn" data-lecture="5">Lecture 5 (152-190)</button>
-            <button class="lecture-btn" data-lecture="6">Lecture 6 (191-226)</button>
-            <button class="lecture-btn" data-lecture="7">Lecture 7 (227-246)</button>
-            <button class="lecture-btn" data-lecture="8">Lecture 8 (247-282)</button>
-            <button class="lecture-btn" data-lecture="9">Lecture 9 (283-322)</button>
-            <button class="lecture-btn" data-lecture="10">Lecture 10 (323-332)</button>
-            <button class="lecture-btn true-false" data-lecture="true-false">True/False Questions (333-400)</button>
+        <!-- شريط الأدوات العلوي -->
+        <div class="toolbar">
+            <div class="toolbar-title">اختبار التعلم الآلي</div>
+            <div class="toolbar-buttons">
+                <button class="toolbar-btn" id="dark-mode-toggle">الوضع الليلي</button>
+                <button class="toolbar-btn" id="reset-progress">إعادة التعيين</button>
+                <button class="toolbar-btn" id="show-achievements">الإنجازات</button>
+                <button class="toolbar-btn" id="about-us-btn">About Us</button>
+            </div>
         </div>
         
+        <!-- شاشة الترحيب -->
+        <div class="welcome-screen" id="welcome-screen">
+            <h1 class="welcome-title">اختبار التعلم الآلي</h1>
+            <p class="welcome-subtitle">اختبار شامل يحتوي على 400 سؤال في التعلم الآلي</p>
+            <div class="batch-info">تم صنع هذا العمل بواسطة دفعة IS_23</div>
+            <div class="welcome-buttons">
+                <button class="welcome-btn" id="start-lectures-btn">المحاضرات</button>
+                <button class="welcome-btn" id="create-test-btn">صنع اختبار</button>
+            </div>
+        </div>
+        
+        <!-- إعدادات الاختبار -->
+        <div class="test-settings" id="test-settings">
+            <h3 class="settings-title">إعدادات الاختبار</h3>
+            <div class="settings-options">
+                <div class="setting-option">
+                    <input type="radio" id="immediate-feedback" name="feedback-type" value="immediate" checked>
+                    <label for="immediate-feedback">تصحيح فوري بعد كل سؤال</label>
+                </div>
+                <div class="setting-option">
+                    <input type="radio" id="delayed-feedback" name="feedback-type" value="delayed">
+                    <label for="delayed-feedback">تصحيح بعد انتهاء الاختبار</label>
+                </div>
+                <div class="setting-option">
+                    <input type="checkbox" id="countdown-timer" checked>
+                    <label for="countdown-timer">مؤقت تنازلي</label>
+                </div>
+                <div class="setting-option">
+                    <label for="test-duration">مدة الاختبار (دقائق):</label>
+                    <input type="number" id="test-duration" min="5" max="120" value="30">
+                </div>
+            </div>
+        </div>
+        
+                <!-- واجهة صنع الاختبار العشوائي -->
+        <!-- استبدل محتوى custom-test-container بالكود التالي -->
+        <div class="custom-test-container" id="custom-test-container">
+            <h2 class="custom-test-title">Create Custom Test</h2>
+            <div class="custom-test-form">
+                <div class="test-configuration">
+                    <div class="config-section">
+                        <label for="question-count">Number of Questions:</label>
+                        <input type="number" class="custom-test-input" id="question-count" min="5" max="100" value="20">
+                    </div>
+                    
+                    <div class="config-section">
+                        <label for="difficulty">Difficulty Level:</label>
+                        <select id="difficulty">
+                            <option value="all">All Levels</option>
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </div>
+                    
+                    <div class="config-section">
+                        <h3>Select Lectures:</h3>
+                        <div class="lecture-checkboxes" id="lecture-checkboxes">
+                            <label><input type="checkbox" value="1" checked> Lecture 1 (1-40)</label>
+                            <label><input type="checkbox" value="2" checked> Lecture 2 (41-73)</label>
+                            <label><input type="checkbox" value="3" checked> Lecture 3 (74-112)</label>
+                            <label><input type="checkbox" value="4" checked> Lecture 4 (113-151)</label>
+                            <label><input type="checkbox" value="5" checked> Lecture 5 (152-190)</label>
+                            <label><input type="checkbox" value="6" checked> Lecture 6 (191-226)</label>
+                            <label><input type="checkbox" value="7" checked> Lecture 7 (227-246)</label>
+                            <label><input type="checkbox" value="8" checked> Lecture 8 (247-282)</label>
+                            <label><input type="checkbox" value="9" checked> Lecture 9 (283-322)</label>
+                            <label><input type="checkbox" value="10" checked> Lecture 10 (323-332)</label>
+                            <label><input type="checkbox" value="true-false" checked> True/False Questions (333-400)</label>
+                        </div>
+                        <div class="selection-actions">
+                            <button class="selection-btn" id="select-all">Select All</button>
+                            <button class="selection-btn" id="deselect-all">Deselect All</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="nav-btn" id="start-custom-test">Start Custom Test</button>
+                <p class="custom-test-info">Questions will be randomly selected from the chosen lectures</p>
+            </div>
+            <button class="return-btn" id="back-to-welcome">Back to Home</button>
+        </div>
+        
+        <!-- قسم المحاضرات -->
+        <div class="lecture-selection" id="lecture-selection">
+            <button class="lecture-btn" data-lecture="1">المحاضرة 1 (1-40)</button>
+            <button class="lecture-btn" data-lecture="2">المحاضرة 2 (41-73)</button>
+            <button class="lecture-btn" data-lecture="3">المحاضرة 3 (74-112)</button>
+            <button class="lecture-btn" data-lecture="4">المحاضرة 4 (113-151)</button>
+            <button class="lecture-btn" data-lecture="5">المحاضرة 5 (152-190)</button>
+            <button class="lecture-btn" data-lecture="6">المحاضرة 6 (191-226)</button>
+            <button class="lecture-btn" data-lecture="7">المحاضرة 7 (227-246)</button>
+            <button class="lecture-btn" data-lecture="8">المحاضرة 8 (247-282)</button>
+            <button class="lecture-btn" data-lecture="9">المحاضرة 9 (283-322)</button>
+            <button class="lecture-btn" data-lecture="10">المحاضرة 10 (323-332)</button>
+            <button class="lecture-btn true-false" data-lecture="true-false">أسئلة صحيح/خطأ (333-400)</button>
+            <button class="return-btn" id="back-to-welcome-2">العودة للصفحة الرئيسية</button>
+        </div>
+        
+        <!-- منطقة الامتحان -->
         <div class="exam-container" id="exam-container">
             <div class="exam-header">
-                <h2 class="lecture-title" id="lecture-title">Lecture 1</h2>
-                <button class="return-btn" id="return-btn">Return to Lectures</button>
+                <h2 class="lecture-title" id="lecture-title">المحاضرة 1</h2>
+                <button class="return-btn" id="return-btn">العودة إلى المحاضرات</button>
             </div>
             
             <div class="progress-container">
                 <div class="progress-bar" id="progress-bar"></div>
             </div>
             <div class="progress-text">
-                <span id="progress-text">Question 1 of 40</span>
-                <span class="timer" id="timer">00:00</span>
+                <span id="progress-text">السؤال 1 من 40</span>
+                <span class="progress-percentage" id="progress-percentage">0%</span>
+                <span class="timer" id="timer">30:00</span>
             </div>
             
             <div class="question-container">
-                <div class="question-number">Question <span id="current-number">1</span></div>
-                <div class="question-text" id="question-text">What is the primary goal of machine learning?</div>
+                <div class="question-number">السؤال <span id="current-number">1</span></div>
+                <div class="question-text" id="question-text">ما هو الهدف الرئيسي للتعلم الآلي؟</div>
                 
                 <div class="options-container" id="options-container">
-                    <label class="option">
-                        <input type="radio" name="option" value="A">
-                        <span class="option-label">A.</span>
-                        <span>To write code for mobile apps</span>
-                    </label>
-                    <label class="option">
-                        <input type="radio" name="option" value="B">
-                        <span class="option-label">B.</span>
-                        <span>To enable systems to learn from data and make predictions</span>
-                    </label>
-                    <label class="option">
-                        <input type="radio" name="option" value="C">
-                        <span class="option-label">C.</span>
-                        <span>To design user interfaces</span>
-                    </label>
-                    <label class="option">
-                        <input type="radio" name="option" value="D">
-                        <span class="option-label">D.</span>
-                        <span>To store data in databases</span>
-                    </label>
+                    <!-- سيتم تعبئة الخيارات ديناميكياً -->
                 </div>
                 
                 <div class="feedback" id="feedback"></div>
                 
                 <div class="navigation">
-                    <button class="nav-btn" id="prev-btn" disabled>Previous</button>
-                    <button class="nav-btn" id="next-btn" disabled>Next</button>
+                    <button class="nav-btn" id="prev-btn" disabled>السابق</button>
+                    <button class="nav-btn" id="next-btn" disabled>التالي</button>
                 </div>
             </div>
             
+            <!-- شاشة النتائج -->
             <div class="results-container" id="results-container">
-                <h2>Test Results</h2>
+                <h2>نتيجة الاختبار</h2>
                 <div class="score" id="score">0/40</div>
-                <div class="score-text" id="score-text">You scored 0% on this test</div>
+                <div class="score-text" id="score-text">لقد حصلت على 0% في هذا الاختبار</div>
                 
                 <div class="stats">
                     <div class="stat-item">
                         <div class="stat-value" id="correct-answers">0</div>
-                        <div class="stat-label">Correct Answers</div>
+                        <div class="stat-label">الإجابات الصحيحة</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-value" id="incorrect-answers">0</div>
-                        <div class="stat-label">Incorrect Answers</div>
+                        <div class="stat-label">الإجابات الخاطئة</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-value" id="time-taken">00:00</div>
-                        <div class="stat-label">Time Taken</div>
+                        <div class="stat-label">الوقت المستغرق</div>
                     </div>
                 </div>
                 
-                <div class="badge" id="badge" style="display: none;">Congratulations! You completed this test</div>
+                <!-- لوحة الإنجازات -->
+                <div class="achievements-panel" id="achievements-panel">
+                    <h3 class="achievements-title">الإنجازات</h3>
+                    <div class="achievements-grid" id="achievements-grid">
+                        <!-- سيتم تعبئة الإنجازات ديناميكياً -->
+                    </div>
+                </div>
                 
-                <p>Congratulations on completing the test! Review your answers to better understand the concepts.</p>
+                <!-- مراجعة الأسئلة -->
+                <div class="review-panel" id="review-panel">
+                    <h3 class="review-title">مراجعة الأسئلة</h3>
+                    <div class="review-questions" id="review-questions">
+                        <!-- سيتم تعبئة الأسئلة ديناميكياً -->
+                    </div>
+                    <button class="nav-btn" id="retry-incorrect">إعادة المحاولة على الأسئلة الخاطئة</button>
+                </div>
+                
+                <!-- لوحة المتصدرين -->
+                <div class="leaderboard" id="leaderboard">
+                    <h3 class="leaderboard-title">لوحة المتصدرين</h3>
+                    <ul class="leaderboard-list" id="leaderboard-list">
+                        <!-- سيتم تعبئة المتصدرين ديناميكياً -->
+                    </ul>
+                </div>
+                
+                <!-- QR Code -->
+                <div class="qr-code-container" id="qr-code-container">
+                    <h3>مشاركة النتيجة عبر QR Code</h3>
+                    <div class="qr-code" id="qr-code"></div>
+                </div>
+                
+                <!-- تصدير PDF -->
+                <div class="pdf-export" id="pdf-export">
+                    <button class="nav-btn" id="export-pdf">تصدير النتيجة كـ PDF</button>
+                </div>
+                
+                <!-- مشاركة النتائج -->
+                <div class="share-results" id="share-results">
+                    <h3 class="share-title">مشاركة النتائج</h3>
+                    <div class="share-buttons">
+                        <button class="share-btn" id="copy-results">نسخ النتائج</button>
+                        <button class="share-btn" id="share-twitter">مشاركة على تويتر</button>
+                        <button class="share-btn" id="share-whatsapp">مشاركة على واتساب</button>
+                    </div>
+                </div>
+                
+                <button class="return-btn" id="back-to-lectures">العودة إلى قائمة المحاضرات</button>
+            </div>
+        </div>
+
+        <!-- قسم About Us -->
+        <div class="about-us-container" id="about-us-container" style="display: none;">
+            <div class="about-us-content">
+                <h2 class="about-us-title">About Us</h2>
+                
+                <div class="thanks-section">
+                    <h3>Special Thanks to Our Question Contributors:</h3>
+                    <ul class="contributors-list">
+                        <li>Abdullah Jaber</li>
+                        <li>Ahmed Al-Wasabi</li>
+                        <li>Ismail Al-Khumari</li>
+                        <li>Ahmed Al-Aini</li>
+                        <li>Mohammed Rajih</li>
+                        <li>Mohammed Taj</li>
+                        <li>Ibrahim Salah</li>
+                        <li>Mahmoud Al-Raidi</li>
+                        <li>Yousif Al-Siyaghi</li>
+                        <li>Bassem Mansour</li>
+                        <li>Asalah Al-Arjazi</li>
+                        <li>Malak Al-Arasi</li>
+                    </ul>
+                </div>
+                
+                <div class="thanks-section">
+                    <h3>Special Thanks to Our Designers and Scientific Committee:</h3>
+                    <ul class="designers-list">
+                        <li>Abdullah Jaber</li>
+                        <li>Ahmed Al-Wasabi</li>
+                        <li>Asalah Al-Arjazi</li>
+                        <li>Malak Al-Arasi</li>
+                    </ul>
+                </div>
+                
+                <button class="return-btn" id="back-from-about">Back to Home</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Complete questions data
+        // بيانات الأسئلة الكاملة
         const questionsData = {
-            "1": [
+             "1": [
                 {
                     question: "What is the primary goal of machine learning?",
                     options: [
@@ -4426,14 +5238,43 @@
                     answer: "B"
                 }
             ]
+        
         };
 
+        // تعريف الإنجازات
+        const achievements = [
+            { id: 'first_test', name: 'أول اختبار', desc: 'أكمل أول اختبار', icon: '🏅', unlocked: false },
+            { id: 'speed_demon', name: 'سريع كالبرق', desc: 'أكمل اختبار في أقل من 5 دقائق', icon: '⚡', unlocked: false },
+            { id: 'high_accuracy', name: 'دقة عالية', desc: 'احصل على 90% أو أكثر', icon: '🎯', unlocked: false },
+            { id: 'perfect_score', name: 'نتيجة مثالية', desc: 'احصل على 100% في اختبار', icon: '💯', unlocked: false },
+            { id: 'marathon', name: 'ماراثون الأسئلة', desc: 'أكمل اختبار 100 سؤال', icon: '🏃', unlocked: false }
+        ];
+
+        // لوحة المتصدرين
+        let leaderboardData = [];
+
         document.addEventListener('DOMContentLoaded', function() {
+            // عناصر الواجهة
+            const welcomeScreen = document.getElementById('welcome-screen');
             const lectureSelection = document.getElementById('lecture-selection');
+            const customTestContainer = document.getElementById('custom-test-container');
             const examContainer = document.getElementById('exam-container');
+            const testSettings = document.getElementById('test-settings');
+            const startLecturesBtn = document.getElementById('start-lectures-btn');
+            const createTestBtn = document.getElementById('create-test-btn');
+            const backToWelcomeBtn = document.getElementById('back-to-welcome');
+            const backToWelcomeBtn2 = document.getElementById('back-to-welcome-2');
+            const questionCountInput = document.getElementById('question-count');
+            const startCustomTestBtn = document.getElementById('start-custom-test');
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const resetProgressBtn = document.getElementById('reset-progress');
+            const showAchievementsBtn = document.getElementById('show-achievements');
+            
+            // عناصر الواجهة الأصلية
             const lectureTitle = document.getElementById('lecture-title');
             const progressBar = document.getElementById('progress-bar');
             const progressText = document.getElementById('progress-text');
+            const progressPercentage = document.getElementById('progress-percentage');
             const questionText = document.getElementById('question-text');
             const currentNumber = document.getElementById('current-number');
             const optionsContainer = document.getElementById('options-container');
@@ -4448,7 +5289,30 @@
             const incorrectAnswersElement = document.getElementById('incorrect-answers');
             const timeTakenElement = document.getElementById('time-taken');
             const timerElement = document.getElementById('timer');
-            const badgeElement = document.getElementById('badge');
+            const achievementsPanel = document.getElementById('achievements-panel');
+            const achievementsGrid = document.getElementById('achievements-grid');
+            const reviewPanel = document.getElementById('review-panel');
+            const reviewQuestions = document.getElementById('review-questions');
+            const retryIncorrectBtn = document.getElementById('retry-incorrect');
+            const leaderboard = document.getElementById('leaderboard');
+            const leaderboardList = document.getElementById('leaderboard-list');
+            const qrCodeContainer = document.getElementById('qr-code-container');
+            const qrCodeElement = document.getElementById('qr-code');
+            const pdfExport = document.getElementById('pdf-export');
+            const exportPdfBtn = document.getElementById('export-pdf');
+            const shareResults = document.getElementById('share-results');
+            const copyResultsBtn = document.getElementById('copy-results');
+            const shareTwitterBtn = document.getElementById('share-twitter');
+            const shareWhatsappBtn = document.getElementById('share-whatsapp');
+            const backToLecturesBtn = document.getElementById('back-to-lectures');
+
+                        // أضف هذه المتغيرات مع بقية المتغيرات
+            const aboutUsBtn = document.getElementById('about-us-btn');
+            const aboutUsContainer = document.getElementById('about-us-container');
+            const backFromAboutBtn = document.getElementById('back-from-about');
+            const lectureCheckboxes = document.getElementById('lecture-checkboxes');
+            const selectAllBtn = document.getElementById('select-all');
+            const deselectAllBtn = document.getElementById('deselect-all');
             
             let currentLecture = null;
             let currentQuestions = [];
@@ -4458,9 +5322,271 @@
             let answered = false;
             let startTime = null;
             let timerInterval = null;
+            let isCustomTest = false;
+            let testDuration = 30; // دقائق
+            let countdownTime = testDuration * 60; // ثواني
+            let immediateFeedback = true;
+            let savedProgress = null;
             
+            // تهيئة التطبيق
+            function init() {
+                loadProgress();
+                loadLeaderboard();
+                
+                // تحميل إعدادات المستخدم
+                const savedSettings = localStorage.getItem('mlTestSettings');
+                if (savedSettings) {
+                    const settings = JSON.parse(savedSettings);
+                    document.getElementById('countdown-timer').checked = settings.countdownTimer;
+                    document.getElementById('test-duration').value = settings.testDuration;
+                    
+                    // تحديد نوع التصحيح
+                    const feedbackType = settings.feedbackType || 'immediate';
+                    document.querySelector(`input[name="feedback-type"][value="${feedbackType}"]`).checked = true;
+                    
+                    testDuration = settings.testDuration;
+                    countdownTime = testDuration * 60;
+                    immediateFeedback = feedbackType === 'immediate';
+                }
+                
+                // التحقق من الوضع الليلي
+                if (localStorage.getItem('darkMode') === 'enabled') {
+                    document.body.classList.add('dark-mode');
+                    darkModeToggle.textContent = 'الوضع النهاري';
+                }
+            }
+            
+            // تحميل التقدم المحفوظ
+            function loadProgress() {
+                const progress = localStorage.getItem('mlTestProgress');
+                if (progress) {
+                    savedProgress = JSON.parse(progress);
+                    // عرض رسالة استئناف إذا كان هناك تقدم محفوظ
+                    if (savedProgress && savedProgress.currentQuestionIndex > 0) {
+                        if (confirm('هناك اختبار غير مكتمل. هل تريد الاستئناف من حيث توقفت؟')) {
+                            resumeTest();
+                        }
+                    }
+                }
+                
+                // تحميل الإنجازات
+                const savedAchievements = localStorage.getItem('mlTestAchievements');
+                if (savedAchievements) {
+                    const unlockedAchievements = JSON.parse(savedAchievements);
+                    achievements.forEach(achievement => {
+                        if (unlockedAchievements.includes(achievement.id)) {
+                            achievement.unlocked = true;
+                        }
+                    });
+                }
+            }
+            
+            // استئناف الاختبار
+            function resumeTest() {
+                if (!savedProgress) return;
+                
+                currentLecture = savedProgress.currentLecture;
+                currentQuestions = savedProgress.currentQuestions;
+                currentQuestionIndex = savedProgress.currentQuestionIndex;
+                userAnswers = savedProgress.userAnswers;
+                score = savedProgress.score;
+                startTime = new Date(savedProgress.startTime);
+                
+                if (savedProgress.isCustomTest) {
+                    isCustomTest = true;
+                    lectureTitle.textContent = `اختبار عشوائي (${currentQuestions.length} أسئلة)`;
+                    customTestContainer.style.display = 'none';
+                } else {
+                    lectureTitle.textContent = currentLecture === 'true-false' ? 
+                        'أسئلة صحيح/خطأ' : `المحاضرة ${currentLecture}`;
+                    lectureSelection.style.display = 'none';
+                }
+                
+                examContainer.style.display = 'block';
+                resultsContainer.style.display = 'none';
+                
+                // استئناف المؤقت
+                const now = new Date();
+                const elapsedSeconds = Math.floor((now - startTime) / 1000);
+                countdownTime = testDuration * 60 - elapsedSeconds;
+                
+                if (timerInterval) clearInterval(timerInterval);
+                timerInterval = setInterval(updateTimer, 1000);
+                updateTimer();
+                
+                loadQuestion();
+                updateProgress();
+                updateNavigation();
+            }
+            
+            // حفظ التقدم
+            function saveProgress() {
+                const progress = {
+                    currentLecture: currentLecture,
+                    currentQuestions: currentQuestions,
+                    currentQuestionIndex: currentQuestionIndex,
+                    userAnswers: userAnswers,
+                    score: score,
+                    startTime: startTime,
+                    isCustomTest: isCustomTest
+                };
+                
+                localStorage.setItem('mlTestProgress', JSON.stringify(progress));
+            }
+            
+            // حفظ الإعدادات
+            function saveSettings() {
+                const settings = {
+                    countdownTimer: document.getElementById('countdown-timer').checked,
+                    testDuration: parseInt(document.getElementById('test-duration').value),
+                    feedbackType: document.querySelector('input[name="feedback-type"]:checked').value
+                };
+                
+                localStorage.setItem('mlTestSettings', JSON.stringify(settings));
+                
+                // تحديث المتغيرات
+                testDuration = settings.testDuration;
+                countdownTime = testDuration * 60;
+                immediateFeedback = settings.feedbackType === 'immediate';
+            }
+            
+            // تفعيل إنجاز
+            function unlockAchievement(achievementId) {
+                const achievement = achievements.find(a => a.id === achievementId);
+                if (achievement && !achievement.unlocked) {
+                    achievement.unlocked = true;
+                    
+                    // حفظ الإنجازات
+                    const unlockedIds = achievements.filter(a => a.unlocked).map(a => a.id);
+                    localStorage.setItem('mlTestAchievements', JSON.stringify(unlockedIds));
+                    
+                    // عرض إشعار
+                    showNotification(`إنجاز مفتوح: ${achievement.name} - ${achievement.desc}`);
+                    
+                    return true;
+                }
+                return false;
+            }
+            
+            // عرض إشعار
+            function showNotification(message) {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+                    color: white;
+                    padding: 15px 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                    z-index: 10000;
+                    animation: slideIn 0.5s ease;
+                `;
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
+            
+            // تحديث المؤقت
+            function updateTimer() {
+                if (document.getElementById('countdown-timer').checked) {
+                    // مؤقت تنازلي
+                    const minutes = Math.floor(countdownTime / 60);
+                    const seconds = countdownTime % 60;
+                    
+                    timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    
+                    if (countdownTime <= 300) { // 5 دقائق أو أقل
+                        timerElement.classList.add('warning');
+                    } else {
+                        timerElement.classList.remove('warning');
+                    }
+                    
+                    if (countdownTime <= 0) {
+                        clearInterval(timerInterval);
+                        showResults();
+                    } else {
+                        countdownTime--;
+                    }
+                } else {
+                    // مؤقت تصاعدي
+                    const now = new Date();
+                    const diff = Math.floor((now - startTime) / 1000);
+                    const minutes = Math.floor(diff / 60);
+                    const seconds = diff % 60;
+                    
+                    timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+            }
+
+
+            // دالة لإنشاء اختبار عشوائي من محاضرات محددة
+            function setupCustomTestFromSelectedLectures(questionCount, selectedLectures) {
+                // جمع الأسئلة من المحاضرات المحددة فقط
+                let allQuestions = [];
+                selectedLectures.forEach(lecture => {
+                    if (questionsData[lecture]) {
+                        allQuestions = allQuestions.concat(questionsData[lecture]);
+                    }
+                });
+                
+                // إذا لم يتم اختيار أي محاضرة، نستخدم جميع المحاضرات
+                if (allQuestions.length === 0) {
+                    for (const lecture in questionsData) {
+                        allQuestions = allQuestions.concat(questionsData[lecture]);
+                    }
+                }
+                
+                // اختيار عدد الأسئلة المطلوبة عشوائياً
+                const shuffledQuestions = allQuestions.sort(() => 0.5 - Math.random());
+                currentQuestions = shuffledQuestions.slice(0, questionCount);
+                
+                currentLecture = 'custom';
+                currentQuestionIndex = 0;
+                userAnswers = Array(currentQuestions.length).fill(null);
+                score = 0;
+                answered = false;
+                
+                // بدء المؤقت
+                startTime = new Date();
+                if (timerInterval) clearInterval(timerInterval);
+                timerInterval = setInterval(updateTimer, 1000);
+                updateTimer();
+                
+                // تحديث واجهة المستخدم
+                lectureTitle.textContent = `Custom Test (${questionCount} questions from ${selectedLectures.length} lectures)`;
+                customTestContainer.style.display = 'none';
+                examContainer.style.display = 'block';
+                resultsContainer.style.display = 'none';
+                
+                loadQuestion();
+                updateProgress();
+                updateNavigation();
+                
+                // حفظ الإعدادات
+                saveSettings();
+            }
+
+            // دالة للحصول على المحاضرات المحددة
+            function getSelectedLectures() {
+                const selected = [];
+                document.querySelectorAll('#lecture-checkboxes input:checked').forEach(checkbox => {
+                    selected.push(checkbox.value);
+                });
+                return selected;
+            }
+
+
+            
+            // إنشاء اختبار عشوائي
+
             // Set up exam for selected lecture
             function setupExam(lecture) {
+                isCustomTest = false;
                 currentLecture = lecture;
                 currentQuestions = questionsData[lecture] || [];
                 currentQuestionIndex = 0;
@@ -4475,7 +5601,7 @@
                 updateTimer();
                 
                 // Update UI
-                lectureTitle.textContent = lecture === 'true-false' ? 'True/False Questions' : `Lecture ${lecture}`;
+                lectureTitle.textContent = lecture === 'true-false' ? 'أسئلة صحيح/خطأ' : `المحاضرة ${lecture}`;
                 lectureSelection.style.display = 'none';
                 examContainer.style.display = 'block';
                 resultsContainer.style.display = 'none';
@@ -4483,18 +5609,9 @@
                 loadQuestion();
                 updateProgress();
                 updateNavigation();
-            }
-            
-            // Update timer
-            function updateTimer() {
-                if (!startTime) return;
                 
-                const now = new Date();
-                const diff = Math.floor((now - startTime) / 1000);
-                const minutes = Math.floor(diff / 60);
-                const seconds = diff % 60;
-                
-                timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                // حفظ الإعدادات
+                saveSettings();
             }
             
             // Load current question
@@ -4559,6 +5676,7 @@
                         firework.className = 'firework';
                         firework.style.left = Math.random() * 100 + 'vw';
                         firework.style.top = Math.random() * 100 + 'vh';
+                        firework.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
                         document.body.appendChild(firework);
                         
                         setTimeout(() => {
@@ -4612,13 +5730,15 @@
                     document.querySelector(`input[value="${question.answer}"]`).parentElement.classList.add('correct-answer');
                 }
                 
-                // Show feedback
-                feedback.textContent = isCorrect ? 
-                    "Correct answer! Well done! 🎉" : 
-                    `Incorrect. The correct answer is: ${question.answer}`;
-                
-                feedback.className = isCorrect ? 'feedback correct' : 'feedback incorrect';
-                feedback.style.display = 'block';
+                // Show feedback if immediate feedback is enabled
+                if (immediateFeedback) {
+                    feedback.textContent = isCorrect ? 
+                        "إجابة صحيحة! أحسنت! 🎉" : 
+                        `إجابة خاطئة. الإجابة الصحيحة هي: ${question.answer}`;
+                    
+                    feedback.className = isCorrect ? 'feedback correct' : 'feedback incorrect';
+                    feedback.style.display = 'block';
+                }
                 
                 // Update score
                 if (isCorrect) {
@@ -4627,13 +5747,17 @@
                 
                 // Enable next button after selecting an answer
                 nextBtn.disabled = false;
+                
+                // Save progress
+                saveProgress();
             }
             
             // Update progress bar
             function updateProgress() {
                 const progress = ((currentQuestionIndex + 1) / currentQuestions.length) * 100;
                 progressBar.style.width = `${progress}%`;
-                progressText.textContent = `Question ${currentQuestionIndex + 1} of ${currentQuestions.length}`;
+                progressText.textContent = `السؤال ${currentQuestionIndex + 1} من ${currentQuestions.length}`;
+                progressPercentage.textContent = `${Math.round(progress)}%`;
             }
             
             // Update navigation buttons
@@ -4641,9 +5765,9 @@
                 prevBtn.disabled = currentQuestionIndex === 0;
                 
                 if (currentQuestionIndex === currentQuestions.length - 1) {
-                    nextBtn.textContent = "Finish Test";
+                    nextBtn.textContent = "إنهاء الاختبار";
                 } else {
-                    nextBtn.textContent = "Next";
+                    nextBtn.textContent = "التالي";
                 }
                 
                 nextBtn.disabled = userAnswers[currentQuestionIndex] === null;
@@ -4662,21 +5786,290 @@
                 const percentage = (score / currentQuestions.length) * 100;
                 
                 scoreElement.textContent = `${score}/${currentQuestions.length}`;
-                scoreTextElement.textContent = `You scored ${percentage.toFixed(1)}% on this test`;
+                scoreTextElement.textContent = `لقد حصلت على ${percentage.toFixed(1)}% في هذا الاختبار`;
                 correctAnswersElement.textContent = score;
                 incorrectAnswersElement.textContent = currentQuestions.length - score;
                 timeTakenElement.textContent = timeString;
                 
                 // Show achievement badge if score is good
                 if (percentage >= 70) {
-                    badgeElement.style.display = 'inline-block';
-                } else {
-                    badgeElement.style.display = 'none';
+                    const badge = document.createElement('div');
+                    badge.className = 'badge';
+                    badge.textContent = 'نتيجة ممتازة! 🏆';
+                    scoreTextElement.parentNode.insertBefore(badge, scoreTextElement.nextSibling);
                 }
+                
+                // Check and unlock achievements
+                checkAchievements(percentage, timeDiff, currentQuestions.length);
+                
+                // Show review panel
+                displayReviewPanel();
+                
+                // Show leaderboard
+                updateLeaderboard(percentage, timeString);
+                
+                // Show share results section
+                shareResults.style.display = 'block';
+                
+                // Show QR code
+                generateQRCode(percentage);
                 
                 resultsContainer.style.display = 'block';
                 createConfetti();
+                
+                // Clear saved progress
+                localStorage.removeItem('mlTestProgress');
             }
+            
+            // Check and unlock achievements
+            function checkAchievements(percentage, timeTaken, questionCount) {
+                // First test achievement
+                unlockAchievement('first_test');
+                
+                // Speed demon achievement (under 5 minutes)
+                if (timeTaken < 300) { // 5 minutes = 300 seconds
+                    unlockAchievement('speed_demon');
+                }
+                
+                // High accuracy achievement (90% or more)
+                if (percentage >= 90) {
+                    unlockAchievement('high_accuracy');
+                }
+                
+                // Perfect score achievement
+                if (percentage === 100) {
+                    unlockAchievement('perfect_score');
+                }
+                
+                // Marathon achievement (100 questions)
+                if (questionCount >= 100) {
+                    unlockAchievement('marathon');
+                }
+            }
+            
+            // Display review panel
+            function displayReviewPanel() {
+                reviewQuestions.innerHTML = '';
+                
+                currentQuestions.forEach((question, index) => {
+                    const userAnswer = userAnswers[index];
+                    const isCorrect = userAnswer === question.answer;
+                    
+                    const reviewQuestion = document.createElement('div');
+                    reviewQuestion.className = `review-question ${isCorrect ? 'correct' : 'incorrect'}`;
+                    
+                    const questionText = document.createElement('div');
+                    questionText.className = 'review-question-text';
+                    questionText.textContent = `السؤال ${index + 1}: ${question.question}`;
+                    
+                    const userAnswerDiv = document.createElement('div');
+                    userAnswerDiv.className = 'review-answer';
+                    userAnswerDiv.innerHTML = `
+                        <span class="answer-label">إجابتك:</span>
+                        <span class="answer-user">${userAnswer ? question.options[userAnswer.charCodeAt(0) - 65] : 'لم تجب'}</span>
+                    `;
+                    
+                    const correctAnswerDiv = document.createElement('div');
+                    correctAnswerDiv.className = 'review-answer';
+                    correctAnswerDiv.innerHTML = `
+                        <span class="answer-label">الإجابة الصحيحة:</span>
+                        <span class="answer-correct">${question.options[question.answer.charCodeAt(0) - 65]}</span>
+                    `;
+                    
+                    reviewQuestion.appendChild(questionText);
+                    if (!isCorrect) {
+                        reviewQuestion.appendChild(userAnswerDiv);
+                    }
+                    reviewQuestion.appendChild(correctAnswerDiv);
+                    
+                    reviewQuestions.appendChild(reviewQuestion);
+                });
+                
+                reviewPanel.style.display = 'block';
+            }
+            
+            // Update leaderboard
+            function updateLeaderboard(percentage, timeTaken) {
+                // Add current result to leaderboard
+                const result = {
+                    score: percentage,
+                    time: timeTaken,
+                    date: new Date().toLocaleDateString('ar-SA'),
+                    questions: currentQuestions.length
+                };
+                
+                leaderboardData.push(result);
+                
+                // Sort by score (descending)
+                leaderboardData.sort((a, b) => b.score - a.score);
+                
+                // Keep only top 10
+                leaderboardData = leaderboardData.slice(0, 10);
+                
+                // Save to localStorage
+                localStorage.setItem('mlTestLeaderboard', JSON.stringify(leaderboardData));
+                
+                // Display leaderboard
+                displayLeaderboard();
+            }
+            
+            // Load leaderboard from localStorage
+            function loadLeaderboard() {
+                const savedLeaderboard = localStorage.getItem('mlTestLeaderboard');
+                if (savedLeaderboard) {
+                    leaderboardData = JSON.parse(savedLeaderboard);
+                }
+            }
+            
+            // Display leaderboard
+            function displayLeaderboard() {
+                leaderboardList.innerHTML = '';
+                
+                leaderboardData.forEach((result, index) => {
+                    const leaderboardItem = document.createElement('li');
+                    leaderboardItem.className = 'leaderboard-item';
+                    
+                    leaderboardItem.innerHTML = `
+                        <span class="leaderboard-rank">${index + 1}</span>
+                        <span>${result.score.toFixed(1)}%</span>
+                        <span>${result.time}</span>
+                        <span>${result.date}</span>
+                    `;
+                    
+                    leaderboardList.appendChild(leaderboardItem);
+                });
+                
+                leaderboard.style.display = 'block';
+            }
+            
+            // Generate QR code
+            function generateQRCode(percentage) {
+                // In a real implementation, you would use a QR code library
+                // For now, we'll create a simple placeholder
+                qrCodeElement.innerHTML = `
+                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;">
+                        <div style="font-size:3rem;">📊</div>
+                        <div style="font-weight:bold;margin-top:10px;">${percentage.toFixed(1)}%</div>
+                    </div>
+                `;
+                
+                qrCodeContainer.style.display = 'block';
+            }
+            
+            // Display achievements
+            function displayAchievements() {
+                achievementsGrid.innerHTML = '';
+                achievements.forEach(achievement => {
+                    const achievementEl = document.createElement('div');
+                    achievementEl.className = `achievement ${achievement.unlocked ? 'unlocked' : ''}`;
+                    achievementEl.innerHTML = `
+                        <div class="achievement-icon">${achievement.icon}</div>
+                        <div class="achievement-name">${achievement.name}</div>
+                        <div class="achievement-desc">${achievement.desc}</div>
+                    `;
+                    achievementsGrid.appendChild(achievementEl);
+                });
+            }
+            
+            // أحداث الأزرار
+            darkModeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark-mode');
+                if (document.body.classList.contains('dark-mode')) {
+                    localStorage.setItem('darkMode', 'enabled');
+                    darkModeToggle.textContent = 'الوضع النهاري';
+                } else {
+                    localStorage.setItem('darkMode', 'disabled');
+                    darkModeToggle.textContent = 'الوضع الليلي';
+                }
+            });
+            
+            resetProgressBtn.addEventListener('click', function() {
+                if (confirm('هل أنت متأكد من أنك تريد حذف كل التقدم والإنجازات؟')) {
+                    localStorage.removeItem('mlTestProgress');
+                    localStorage.removeItem('mlTestAchievements');
+                    localStorage.removeItem('mlTestLeaderboard');
+                    location.reload();
+                }
+            });
+            
+            showAchievementsBtn.addEventListener('click', function() {
+                displayAchievements();
+                achievementsPanel.style.display = 'block';
+            });
+            
+            // الانتقال إلى قسم المحاضرات
+            startLecturesBtn.addEventListener('click', function() {
+                welcomeScreen.style.display = 'none';
+                lectureSelection.style.display = 'grid';
+            });
+            
+            // الانتقال إلى قسم صنع الاختبار
+            createTestBtn.addEventListener('click', function() {
+                welcomeScreen.style.display = 'none';
+                customTestContainer.style.display = 'block';
+            });
+            
+            // العودة إلى الصفحة الرئيسية
+            backToWelcomeBtn.addEventListener('click', function() {
+                customTestContainer.style.display = 'none';
+                welcomeScreen.style.display = 'flex';
+            });
+            
+            backToWelcomeBtn2.addEventListener('click', function() {
+                lectureSelection.style.display = 'none';
+                welcomeScreen.style.display = 'flex';
+            });
+
+
+
+                        // حدث زر About Us
+            aboutUsBtn.addEventListener('click', function() {
+                welcomeScreen.style.display = 'none';
+                lectureSelection.style.display = 'none';
+                customTestContainer.style.display = 'none';
+                examContainer.style.display = 'none';
+                resultsContainer.style.display = 'none';
+                aboutUsContainer.style.display = 'flex';
+            });
+
+            // حدث العودة من About Us
+            backFromAboutBtn.addEventListener('click', function() {
+                aboutUsContainer.style.display = 'none';
+                welcomeScreen.style.display = 'flex';
+            });
+
+            // حدث اختيار الكل
+            selectAllBtn.addEventListener('click', function() {
+                document.querySelectorAll('#lecture-checkboxes input').forEach(checkbox => {
+                    checkbox.checked = true;
+                });
+            });
+
+            // حدث إلغاء اختيار الكل
+            deselectAllBtn.addEventListener('click', function() {
+                document.querySelectorAll('#lecture-checkboxes input').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+            });
+            
+            // تعديل حدث بدء الاختبار العشوائي
+            startCustomTestBtn.addEventListener('click', function() {
+                const questionCount = parseInt(questionCountInput.value);
+                if (questionCount < 5 || questionCount > 100) {
+                    alert('Please select between 5 and 100 questions');
+                    return;
+                }
+                
+                const selectedLectures = getSelectedLectures();
+                if (selectedLectures.length === 0) {
+                    alert('Please select at least one lecture');
+                    return;
+                }
+                
+                isCustomTest = true;
+                setupCustomTestFromSelectedLectures(questionCount, selectedLectures);
+            });
+
             
             // Click events for lecture buttons
             document.querySelectorAll('.lecture-btn').forEach(button => {
@@ -4710,9 +6103,91 @@
             // Return to lectures button
             returnBtn.addEventListener('click', function() {
                 clearInterval(timerInterval);
-                lectureSelection.style.display = 'grid';
-                examContainer.style.display = 'none';
+                
+                if (isCustomTest) {
+                    examContainer.style.display = 'none';
+                    customTestContainer.style.display = 'block';
+                } else {
+                    examContainer.style.display = 'none';
+                    lectureSelection.style.display = 'grid';
+                }
             });
+            
+            // Retry incorrect questions
+            retryIncorrectBtn.addEventListener('click', function() {
+                const incorrectQuestions = currentQuestions.filter((question, index) => {
+                    return userAnswers[index] !== question.answer;
+                });
+                
+                if (incorrectQuestions.length === 0) {
+                    alert('لا توجد أسئلة خاطئة لإعادة المحاولة!');
+                    return;
+                }
+                
+                currentQuestions = incorrectQuestions;
+                currentQuestionIndex = 0;
+                userAnswers = Array(currentQuestions.length).fill(null);
+                score = 0;
+                answered = false;
+                
+                // Start timer
+                startTime = new Date();
+                if (timerInterval) clearInterval(timerInterval);
+                timerInterval = setInterval(updateTimer, 1000);
+                updateTimer();
+                
+                // Update UI
+                resultsContainer.style.display = 'none';
+                examContainer.style.display = 'block';
+                
+                loadQuestion();
+                updateProgress();
+                updateNavigation();
+            });
+            
+            // Copy results to clipboard
+            copyResultsBtn.addEventListener('click', function() {
+                const percentage = (score / currentQuestions.length) * 100;
+                const resultText = `نتيجة اختبار التعلم الآلي: ${score}/${currentQuestions.length} (${percentage.toFixed(1)}%) - الوقت المستغرق: ${timeTakenElement.textContent}`;
+                
+                navigator.clipboard.writeText(resultText).then(function() {
+                    alert('تم نسخ النتائج إلى الحافظة!');
+                }, function(err) {
+                    console.error('Failed to copy: ', err);
+                });
+            });
+            
+            // Share on Twitter
+            shareTwitterBtn.addEventListener('click', function() {
+                const percentage = (score / currentQuestions.length) * 100;
+                const text = `نتيجة اختبار التعلم الآلي: ${score}/${currentQuestions.length} (${percentage.toFixed(1)}%)`;
+                const url = window.location.href;
+                const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+                window.open(twitterUrl, '_blank');
+            });
+            
+            // Share on WhatsApp
+            shareWhatsappBtn.addEventListener('click', function() {
+                const percentage = (score / currentQuestions.length) * 100;
+                const text = `نتيجة اختبار التعلم الآلي: ${score}/${currentQuestions.length} (${percentage.toFixed(1)}%) - ${window.location.href}`;
+                const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+                window.open(whatsappUrl, '_blank');
+            });
+            
+            // Export to PDF
+            exportPdfBtn.addEventListener('click', function() {
+                // In a real implementation, you would use a PDF library like jsPDF
+                alert('سيتم تصدير النتيجة كملف PDF في التطبيق الكامل');
+            });
+            
+            // Back to lectures from results
+            backToLecturesBtn.addEventListener('click', function() {
+                resultsContainer.style.display = 'none';
+                lectureSelection.style.display = 'grid';
+            });
+            
+            // Initialize the application
+            init();
         });
     </script>
 </body>
