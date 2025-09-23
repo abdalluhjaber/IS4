@@ -910,9 +910,10 @@
         }
         
         /* أنماط القائمة الجانبية للأسئلة - محسنة للشاشات الصغيرة */
+        /* أنماط القائمة الجانبية للأسئلة - على اليمين */
         .questions-sidebar {
-            position: fixed;
-            right: 20px;
+            position: absolute;
+            right: 20px; /* تغيير من left إلى right */
             top: 100px;
             width: 200px;
             background: white;
@@ -922,7 +923,6 @@
             max-height: calc(100vh - 200px);
             overflow-y: auto;
             z-index: 10;
-            transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
         body.dark-mode .questions-sidebar {
@@ -995,10 +995,14 @@
             margin-right: 0;
         }
 
+
+
+
+
         .toggle-sidebar {
-            position: fixed;
-            right: 10px;
-            top: 70px;
+            position: absolute;
+            right: 20px;
+            top: 60px;
             background: var(--primary-color);
             color: white;
             border: none;
@@ -1059,18 +1063,22 @@
                 width: 100%;
             }
             
-            .toggle-sidebar {
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                top: auto;
-                width: 60px;
-                height: 60px;
-                border-radius: 50%;
-                font-size: 1.5rem;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-                z-index: 101;
-            }
+        .toggle-sidebar {
+            position: absolute;
+            right: 10px; /* تغيير من left إلى right */
+            top: 10px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 11;
+        }
             
             .toggle-sidebar.active {
                 background: var(--danger-color);
