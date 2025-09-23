@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>اختبار التعلم الآلي - 400 سؤال</title>
-    <style>
+      <style>
         /* جميع الأنماط الموجودة في الكود الأصلي */
         * {
             box-sizing: border-box;
@@ -909,39 +909,184 @@
             100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
         }
         
-        /* وسائط متجاوبة */
-        @media (max-width: 768px) {
-            .about-us-content {
-                padding: 20px;
-            }
-            
-            .about-us-title {
-                font-size: 2rem;
-            }
-            
-            .thanks-section h3 {
-                font-size: 1.3rem;
-            }
-            
-            .lecture-checkboxes {
-                grid-template-columns: 1fr;
-                max-height: 150px;
-            }
-            
-            .selection-actions {
-                flex-direction: column;
-            }
+        /* أنماط القائمة الجانبية للأسئلة - محسنة للشاشات الصغيرة */
+        .questions-sidebar {
+            position: fixed;
+            right: 20px;
+            top: 100px;
+            width: 200px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            padding: 15px;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+            z-index: 10;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
 
-            .lecture-selection {
-                grid-template-columns: 1fr;
+        body.dark-mode .questions-sidebar {
+            background: #2d3748;
+        }
+
+        .questions-sidebar h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            text-align: center;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 10px;
+        }
+
+        body.dark-mode .questions-sidebar h3 {
+            border-bottom: 1px solid #4a5568;
+        }
+
+        .questions-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+            gap: 8px;
+        }
+
+        .question-item {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: bold;
+            border: 2px solid transparent;
+        }
+
+        body.dark-mode .question-item {
+            background: #4a5568;
+        }
+
+        .question-item:hover {
+            transform: scale(1.1);
+            border-color: var(--primary-color);
+        }
+
+        .question-item.current {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .question-item.answered {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .question-item.answered-incorrect {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .exam-content {
+            margin-right: 220px;
+            transition: margin-right 0.3s;
+        }
+
+        .exam-content.full-width {
+            margin-right: 0;
+        }
+
+        .toggle-sidebar {
+            position: fixed;
+            right: 10px;
+            top: 70px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 11;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* إصلاحات للشاشات الصغيرة */
+        @media (max-width: 768px) {
+            .questions-sidebar {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                top: auto;
+                width: 100%;
+                max-height: 120px;
+                border-radius: 15px 15px 0 0;
+                padding: 10px;
+                transform: translateY(100%);
+                opacity: 0;
+                z-index: 100;
+                box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
             }
             
+            .questions-sidebar.active {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            
+            .questions-sidebar h3 {
+                display: none;
+            }
+            
+            .questions-list {
+                grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
+                gap: 5px;
+                max-height: 80px;
+                overflow-y: auto;
+            }
+            
+            .question-item {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+            
+            .exam-content {
+                margin-right: 0;
+                width: 100%;
+            }
+            
+            .toggle-sidebar {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                top: auto;
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                font-size: 1.5rem;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+                z-index: 101;
+            }
+            
+            .toggle-sidebar.active {
+                background: var(--danger-color);
+            }
+            
+            /* تحسينات إضافية للشاشات الصغيرة */
             .question-container {
                 padding: 15px;
             }
             
             .question-text {
                 font-size: 1.1rem;
+            }
+            
+            .option {
+                padding: 12px;
             }
             
             .navigation {
@@ -990,18 +1135,72 @@
                 width: 100%;
                 justify-content: center;
             }
+            
+            .lecture-selection {
+                grid-template-columns: 1fr;
+            }
+        }
 
-            /* تعديلات للقائمة الجانبية على الشاشات الصغيرة */
-            .questions-sidebar {
-                position: static;
-                width: 100%;
-                max-height: 200px;
-                margin-bottom: 20px;
+        @media (max-width: 480px) {
+            .container {
+                border-radius: 10px;
             }
             
-            .exam-content {
-                width: 100%;
-                margin-left: 0;
+            .welcome-screen {
+                padding: 20px;
+                min-height: 300px;
+            }
+            
+            .welcome-title {
+                font-size: 2rem;
+            }
+            
+            .welcome-subtitle {
+                font-size: 1rem;
+            }
+            
+            .batch-info {
+                font-size: 1rem;
+                padding: 8px 15px;
+            }
+            
+            .welcome-btn {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+            
+            .questions-list {
+                grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
+            }
+            
+            .question-item {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* وسائط متجاوبة إضافية */
+        @media (max-width: 768px) {
+            .about-us-content {
+                padding: 20px;
+            }
+            
+            .about-us-title {
+                font-size: 2rem;
+            }
+            
+            .thanks-section h3 {
+                font-size: 1.3rem;
+            }
+            
+            .lecture-checkboxes {
+                grid-template-columns: 1fr;
+                max-height: 150px;
+            }
+            
+            .selection-actions {
+                flex-direction: column;
             }
         }
 
@@ -1154,126 +1353,6 @@
         .score-text {
             direction: ltr;
             text-align: left;
-        }
-
-        /* أنماط القائمة الجانبية للأسئلة - على اليمين */
-        .questions-sidebar {
-            position: absolute;
-            right: 20px; /* تغيير من left إلى right */
-            top: 100px;
-            width: 200px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            padding: 15px;
-            max-height: calc(100vh - 200px);
-            overflow-y: auto;
-            z-index: 10;
-        }
-
-        body.dark-mode .questions-sidebar {
-            background: #2d3748;
-        }
-
-        .questions-sidebar h3 {
-            margin-bottom: 15px;
-            color: var(--primary-color);
-            text-align: center;
-            border-bottom: 1px solid #e9ecef;
-            padding-bottom: 10px;
-        }
-
-        body.dark-mode .questions-sidebar h3 {
-            border-bottom: 1px solid #4a5568;
-        }
-
-        .questions-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
-            gap: 8px;
-        }
-
-        .question-item {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f8f9fa;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: bold;
-            border: 2px solid transparent;
-        }
-
-        body.dark-mode .question-item {
-            background: #4a5568;
-        }
-
-        .question-item:hover {
-            transform: scale(1.1);
-            border-color: var(--primary-color);
-        }
-
-        .question-item.current {
-            background: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-
-        .question-item.answered {
-            background: var(--success-color);
-            color: white;
-        }
-
-        .question-item.answered-incorrect {
-            background: var(--danger-color);
-            color: white;
-        }
-
-        .exam-content {
-            margin-right: 220px; /* تغيير من margin-right إلى margin-left */
-            transition: margin-right 0.3s;
-        }
-
-        .exam-content.full-width {
-            margin-right: 0;
-        }
-
-        .toggle-sidebar {
-            position: absolute;
-            right: 10px; /* تغيير من left إلى right */
-            top: 10px;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 11;
-        }
-
-        @media (max-width: 768px) {
-            .questions-sidebar {
-                position: static;
-                width: 100%;
-                max-height: 200px;
-                margin-bottom: 20px;
-            }
-            
-            .exam-content {
-                margin-left: 0;
-                width: 100%;
-            }
-            
-            .toggle-sidebar {
-                display: none;
-            }
         }
     </style>
 </head>
@@ -5476,6 +5555,41 @@
             let immediateFeedback = true;
             let savedProgress = null;
             let sidebarVisible = true;
+
+
+                        // تحديث التخطيط عند تغيير حجم النافذة
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    // على الشاشات الكبيرة، إظهار القائمة الجانبية بشكل طبيعي
+                    questionsSidebar.style.display = 'block';
+                    questionsSidebar.classList.remove('active');
+                    examContent.classList.remove('full-width');
+                    toggleSidebarBtn.textContent = '☰';
+                    toggleSidebarBtn.style.position = 'fixed';
+                    toggleSidebarBtn.style.top = '70px';
+                    toggleSidebarBtn.style.right = '10px';
+                    toggleSidebarBtn.style.bottom = 'auto';
+                    toggleSidebarBtn.style.width = '40px';
+                    toggleSidebarBtn.style.height = '40px';
+                    toggleSidebarBtn.style.borderRadius = '5px';
+                    toggleSidebarBtn.style.fontSize = '1.2rem';
+                    sidebarVisible = true;
+                } else {
+                    // على الشاشات الصغيرة، إخفاء القائمة الجانبية افتراضياً
+                    questionsSidebar.style.display = 'block'; // يجب أن تظل معروضة لكن مخفية بالتحويل
+                    questionsSidebar.classList.remove('active');
+                    toggleSidebarBtn.style.position = 'fixed';
+                    toggleSidebarBtn.style.bottom = '20px';
+                    toggleSidebarBtn.style.right = '20px';
+                    toggleSidebarBtn.style.top = 'auto';
+                    toggleSidebarBtn.style.width = '60px';
+                    toggleSidebarBtn.style.height = '60px';
+                    toggleSidebarBtn.style.borderRadius = '50%';
+                    toggleSidebarBtn.style.fontSize = '1.5rem';
+                    toggleSidebarBtn.textContent = '≡';
+                    sidebarVisible = false;
+                }
+            });
             
             // تهيئة التطبيق
             function init() {
@@ -5503,6 +5617,18 @@
                     document.body.classList.add('dark-mode');
                     darkModeToggle.textContent = 'الوضع النهاري';
                 }
+
+                // على الشاشات الصغيرة، إخفاء القائمة الجانبية افتراضياً
+                if (window.innerWidth <= 768) {
+                    questionsSidebar.classList.remove('active');
+                    toggleSidebarBtn.textContent = '≡';
+                    sidebarVisible = false;
+                }
+            }
+
+            // دالة مساعدة للتحقق من حجم الشاشة
+            function isMobileScreen() {
+                return window.innerWidth <= 768;
             }
             
             // تحميل التقدم المحفوظ
@@ -5553,6 +5679,13 @@
                     
                     questionItem.addEventListener('click', function() {
                         navigateToQuestion(parseInt(this.dataset.index));
+                        
+                        // على الشاشات الصغيرة، إغلاق القائمة بعد اختيار سؤال
+                        if (isMobileScreen()) {
+                            questionsSidebar.classList.remove('active');
+                            toggleSidebarBtn.textContent = '≡';
+                            sidebarVisible = false;
+                        }
                     });
                     
                     questionsList.appendChild(questionItem);
@@ -5591,17 +5724,28 @@
             }
             
             // إظهار/إخفاء القائمة الجانبية
+                // إظهار/إخفاء القائمة الجانبية - مصحح للشاشات الصغيرة
             function toggleSidebar() {
-                sidebarVisible = !sidebarVisible;
-                
-                if (sidebarVisible) {
-                    questionsSidebar.style.display = 'block';
-                    examContent.classList.remove('full-width');
-                    toggleSidebarBtn.textContent = '☰';
+                if (window.innerWidth <= 768) {
+                    // على الشاشات الصغيرة: استخدام الكلاس active للتحكم بالظهور
+                    questionsSidebar.classList.toggle('active');
+                    toggleSidebarBtn.textContent = questionsSidebar.classList.contains('active') ? '✕' : '≡';
+                    
+                    // تحديث حالة المتغير
+                    sidebarVisible = questionsSidebar.classList.contains('active');
                 } else {
-                    questionsSidebar.style.display = 'none';
-                    examContent.classList.add('full-width');
-                    toggleSidebarBtn.textContent = '☰';
+                    // على الشاشات الكبيرة: استخدام الطريقة الأصلية
+                    sidebarVisible = !sidebarVisible;
+                    
+                    if (sidebarVisible) {
+                        questionsSidebar.style.display = 'block';
+                        examContent.classList.remove('full-width');
+                        toggleSidebarBtn.textContent = '☰';
+                    } else {
+                        questionsSidebar.style.display = 'none';
+                        examContent.classList.add('full-width');
+                        toggleSidebarBtn.textContent = '☰';
+                    }
                 }
             }
             
@@ -6421,6 +6565,8 @@
                 resultsContainer.style.display = 'none';
                 lectureSelection.style.display = 'grid';
             });
+
+            
             
             // Initialize the application
             init();
