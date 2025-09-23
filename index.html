@@ -272,6 +272,7 @@
         .exam-container {
             display: none;
             padding: 20px;
+            position: relative;
         }
         
         .exam-header {
@@ -910,8 +911,6 @@
         
         /* وسائط متجاوبة */
         @media (max-width: 768px) {
-
-
             .about-us-content {
                 padding: 20px;
             }
@@ -932,9 +931,6 @@
             .selection-actions {
                 flex-direction: column;
             }
-        
-
-
 
             .lecture-selection {
                 grid-template-columns: 1fr;
@@ -993,6 +989,19 @@
             .toolbar-buttons {
                 width: 100%;
                 justify-content: center;
+            }
+
+            /* تعديلات للقائمة الجانبية على الشاشات الصغيرة */
+            .questions-sidebar {
+                position: static;
+                width: 100%;
+                max-height: 200px;
+                margin-bottom: 20px;
+            }
+            
+            .exam-content {
+                width: 100%;
+                margin-left: 0;
             }
         }
 
@@ -1072,7 +1081,7 @@
             border-color: #6b3a3a !important;
         }
 
-                /* أنماط قسم About Us */
+        /* أنماط قسم About Us */
         .about-us-container {
             padding: 40px;
             text-align: center;
@@ -1129,7 +1138,7 @@
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
         }
 
-                /* تعديلات لعرض الأسئلة من اليسار إلى اليمين */
+        /* تعديلات لعرض الأسئلة من اليسار إلى اليمين */
         .question-text,
         .options-container,
         .option,
@@ -1145,6 +1154,126 @@
         .score-text {
             direction: ltr;
             text-align: left;
+        }
+
+        /* أنماط القائمة الجانبية للأسئلة - على اليمين */
+        .questions-sidebar {
+            position: absolute;
+            right: 20px; /* تغيير من left إلى right */
+            top: 100px;
+            width: 200px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            padding: 15px;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        body.dark-mode .questions-sidebar {
+            background: #2d3748;
+        }
+
+        .questions-sidebar h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            text-align: center;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 10px;
+        }
+
+        body.dark-mode .questions-sidebar h3 {
+            border-bottom: 1px solid #4a5568;
+        }
+
+        .questions-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+            gap: 8px;
+        }
+
+        .question-item {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: bold;
+            border: 2px solid transparent;
+        }
+
+        body.dark-mode .question-item {
+            background: #4a5568;
+        }
+
+        .question-item:hover {
+            transform: scale(1.1);
+            border-color: var(--primary-color);
+        }
+
+        .question-item.current {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .question-item.answered {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .question-item.answered-incorrect {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .exam-content {
+            margin-right: 220px; /* تغيير من margin-right إلى margin-left */
+            transition: margin-right 0.3s;
+        }
+
+        .exam-content.full-width {
+            margin-right: 0;
+        }
+
+        .toggle-sidebar {
+            position: absolute;
+            right: 10px; /* تغيير من left إلى right */
+            top: 10px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 11;
+        }
+
+        @media (max-width: 768px) {
+            .questions-sidebar {
+                position: static;
+                width: 100%;
+                max-height: 200px;
+                margin-bottom: 20px;
+            }
+            
+            .exam-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .toggle-sidebar {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -1195,8 +1324,7 @@
             </div>
         </div>
         
-                <!-- واجهة صنع الاختبار العشوائي -->
-        <!-- استبدل محتوى custom-test-container بالكود التالي -->
+        <!-- واجهة صنع الاختبار العشوائي -->
         <div class="custom-test-container" id="custom-test-container">
             <h2 class="custom-test-title">Create Custom Test</h2>
             <div class="custom-test-form">
@@ -1262,104 +1390,118 @@
         
         <!-- منطقة الامتحان -->
         <div class="exam-container" id="exam-container">
-            <div class="exam-header">
-                <h2 class="lecture-title" id="lecture-title">المحاضرة 1</h2>
-                <button class="return-btn" id="return-btn">العودة إلى المحاضرات</button>
-            </div>
-            
-            <div class="progress-container">
-                <div class="progress-bar" id="progress-bar"></div>
-            </div>
-            <div class="progress-text">
-                <span id="progress-text">السؤال 1 من 40</span>
-                <span class="progress-percentage" id="progress-percentage">0%</span>
-                <span class="timer" id="timer">30:00</span>
-            </div>
-            
-            <div class="question-container">
-                <div class="question-number">السؤال <span id="current-number">1</span></div>
-                <div class="question-text" id="question-text">ما هو الهدف الرئيسي للتعلم الآلي؟</div>
-                
-                <div class="options-container" id="options-container">
-                    <!-- سيتم تعبئة الخيارات ديناميكياً -->
-                </div>
-                
-                <div class="feedback" id="feedback"></div>
-                
-                <div class="navigation">
-                    <button class="nav-btn" id="prev-btn" disabled>السابق</button>
-                    <button class="nav-btn" id="next-btn" disabled>التالي</button>
+            <!-- القائمة الجانبية للأسئلة -->
+            <div class="questions-sidebar" id="questions-sidebar">
+                <h3>أسئلة المحاضرة</h3>
+                <div class="questions-list" id="questions-list">
+                    <!-- سيتم تعبئة أرقام الأسئلة ديناميكياً -->
                 </div>
             </div>
             
-            <!-- شاشة النتائج -->
-            <div class="results-container" id="results-container">
-                <h2>نتيجة الاختبار</h2>
-                <div class="score" id="score">0/40</div>
-                <div class="score-text" id="score-text">لقد حصلت على 0% في هذا الاختبار</div>
+            <!-- زر إظهار/إخفاء القائمة الجانبية -->
+            <button class="toggle-sidebar" id="toggle-sidebar">☰</button>
+            
+            <!-- محتوى الامتحان الرئيسي -->
+            <div class="exam-content" id="exam-content">
+                <div class="exam-header">
+                    <h2 class="lecture-title" id="lecture-title">المحاضرة 1</h2>
+                    <button class="return-btn" id="return-btn">العودة إلى المحاضرات</button>
+                </div>
                 
-                <div class="stats">
-                    <div class="stat-item">
-                        <div class="stat-value" id="correct-answers">0</div>
-                        <div class="stat-label">الإجابات الصحيحة</div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                <div class="progress-text">
+                    <span id="progress-text">السؤال 1 من 40</span>
+                    <span class="progress-percentage" id="progress-percentage">0%</span>
+                    <span class="timer" id="timer">30:00</span>
+                </div>
+                
+                <div class="question-container">
+                    <div class="question-number">السؤال <span id="current-number">1</span></div>
+                    <div class="question-text" id="question-text">ما هو الهدف الرئيسي للتعلم الآلي؟</div>
+                    
+                    <div class="options-container" id="options-container">
+                        <!-- سيتم تعبئة الخيارات ديناميكياً -->
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="incorrect-answers">0</div>
-                        <div class="stat-label">الإجابات الخاطئة</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="time-taken">00:00</div>
-                        <div class="stat-label">الوقت المستغرق</div>
-                    </div>
-                </div>
-                
-                <!-- لوحة الإنجازات -->
-                <div class="achievements-panel" id="achievements-panel">
-                    <h3 class="achievements-title">الإنجازات</h3>
-                    <div class="achievements-grid" id="achievements-grid">
-                        <!-- سيتم تعبئة الإنجازات ديناميكياً -->
-                    </div>
-                </div>
-                
-                <!-- مراجعة الأسئلة -->
-                <div class="review-panel" id="review-panel">
-                    <h3 class="review-title">مراجعة الأسئلة</h3>
-                    <div class="review-questions" id="review-questions">
-                        <!-- سيتم تعبئة الأسئلة ديناميكياً -->
-                    </div>
-                    <button class="nav-btn" id="retry-incorrect">إعادة المحاولة على الأسئلة الخاطئة</button>
-                </div>
-                
-                <!-- لوحة المتصدرين -->
-                <div class="leaderboard" id="leaderboard">
-                    <h3 class="leaderboard-title">لوحة المتصدرين</h3>
-                    <ul class="leaderboard-list" id="leaderboard-list">
-                        <!-- سيتم تعبئة المتصدرين ديناميكياً -->
-                    </ul>
-                </div>
-                
-                <!-- QR Code -->
-                <div class="qr-code-container" id="qr-code-container">
-                    <h3>مشاركة النتيجة عبر QR Code</h3>
-                    <div class="qr-code" id="qr-code"></div>
-                </div>
-                
-                <!-- تصدير PDF -->
-                <div class="pdf-export" id="pdf-export">
-                    <button class="nav-btn" id="export-pdf">تصدير النتيجة كـ PDF</button>
-                </div>
-                
-                <!-- مشاركة النتائج -->
-                <div class="share-results" id="share-results">
-                    <h3 class="share-title">مشاركة النتائج</h3>
-                    <div class="share-buttons">
-                        <button class="share-btn" id="copy-results">نسخ النتائج</button>
-                        <button class="share-btn" id="share-twitter">مشاركة على تويتر</button>
-                        <button class="share-btn" id="share-whatsapp">مشاركة على واتساب</button>
+                    
+                    <div class="feedback" id="feedback"></div>
+                    
+                    <div class="navigation">
+                        <button class="nav-btn" id="prev-btn" disabled>السابق</button>
+                        <button class="nav-btn" id="next-btn" disabled>التالي</button>
                     </div>
                 </div>
                 
-                <button class="return-btn" id="back-to-lectures">العودة إلى قائمة المحاضرات</button>
+                <!-- شاشة النتائج -->
+                <div class="results-container" id="results-container">
+                    <h2>نتيجة الاختبار</h2>
+                    <div class="score" id="score">0/40</div>
+                    <div class="score-text" id="score-text">لقد حصلت على 0% في هذا الاختبار</div>
+                    
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div class="stat-value" id="correct-answers">0</div>
+                            <div class="stat-label">الإجابات الصحيحة</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="incorrect-answers">0</div>
+                            <div class="stat-label">الإجابات الخاطئة</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="time-taken">00:00</div>
+                            <div class="stat-label">الوقت المستغرق</div>
+                        </div>
+                    </div>
+                    
+                    <!-- لوحة الإنجازات -->
+                    <div class="achievements-panel" id="achievements-panel">
+                        <h3 class="achievements-title">الإنجازات</h3>
+                        <div class="achievements-grid" id="achievements-grid">
+                            <!-- سيتم تعبئة الإنجازات ديناميكياً -->
+                        </div>
+                    </div>
+                    
+                    <!-- مراجعة الأسئلة -->
+                    <div class="review-panel" id="review-panel">
+                        <h3 class="review-title">مراجعة الأسئلة</h3>
+                        <div class="review-questions" id="review-questions">
+                            <!-- سيتم تعبئة الأسئلة ديناميكياً -->
+                        </div>
+                        <button class="nav-btn" id="retry-incorrect">إعادة المحاولة على الأسئلة الخاطئة</button>
+                    </div>
+                    
+                    <!-- لوحة المتصدرين -->
+                    <div class="leaderboard" id="leaderboard">
+                        <h3 class="leaderboard-title">لوحة المتصدرين</h3>
+                        <ul class="leaderboard-list" id="leaderboard-list">
+                            <!-- سيتم تعبئة المتصدرين ديناميكياً -->
+                        </ul>
+                    </div>
+                    
+                    <!-- QR Code -->
+                    <div class="qr-code-container" id="qr-code-container">
+                        <h3>مشاركة النتيجة عبر QR Code</h3>
+                        <div class="qr-code" id="qr-code"></div>
+                    </div>
+                    
+                    <!-- تصدير PDF -->
+                    <div class="pdf-export" id="pdf-export">
+                        <button class="nav-btn" id="export-pdf">تصدير النتيجة كـ PDF</button>
+                    </div>
+                    
+                    <!-- مشاركة النتائج -->
+                    <div class="share-results" id="share-results">
+                        <h3 class="share-title">مشاركة النتائج</h3>
+                        <div class="share-buttons">
+                            <button class="share-btn" id="copy-results">نسخ النتائج</button>
+                            <button class="share-btn" id="share-twitter">مشاركة على تويتر</button>
+                            <button class="share-btn" id="share-whatsapp">مشاركة على واتساب</button>
+                        </div>
+                    </div>
+                    
+                    <button class="return-btn" id="back-to-lectures">العودة إلى قائمة المحاضرات</button>
+                </div>
             </div>
         </div>
 
@@ -1372,7 +1514,7 @@
                     <h3>Special Thanks to Our Question Contributors:</h3>
                     <ul class="contributors-list">
                         <li>Abdullah Jaber</li>
-                        <li>Ahmed Al-Wsabi</li>
+                        <li>Ahmed Al-Wasabi</li>
                         <li>Ismail Al-Khumari</li>
                         <li>Ahmed Al-Aini</li>
                         <li>Mohammed Rajih</li>
@@ -1380,7 +1522,7 @@
                         <li>Ibrahim Salah</li>
                         <li>Mahmoud Al-Raidi</li>
                         <li>Yousif Al-Siyaghi</li>
-                        <li>Bassem Munasser</li>
+                        <li>Bassem Mansour</li>
                         <li>Asalah Al-Arjazi</li>
                         <li>Malak Al-Arasi</li>
                     </ul>
@@ -1390,7 +1532,7 @@
                     <h3>Special Thanks to Our Designers and Scientific Committee:</h3>
                     <ul class="designers-list">
                         <li>Abdullah Jaber</li>
-                        <li>Ahmed Al-Wsabi</li>
+                        <li>Ahmed Al-Wasabi</li>
                         <li>Asalah Al-Arjazi</li>
                         <li>Malak Al-Arasi</li>
                     </ul>
@@ -1402,9 +1544,9 @@
     </div>
 
     <script>
-        // بيانات الأسئلة الكاملة
+        // بيانات الأسئلة الكاملة (نفس البيانات السابقة)
         const questionsData = {
-             "1": [
+            "1": [
                 {
                     question: "What is the primary goal of machine learning?",
                     options: [
@@ -5270,6 +5412,12 @@
             const resetProgressBtn = document.getElementById('reset-progress');
             const showAchievementsBtn = document.getElementById('show-achievements');
             
+            // عناصر القائمة الجانبية للأسئلة
+            const questionsSidebar = document.getElementById('questions-sidebar');
+            const questionsList = document.getElementById('questions-list');
+            const toggleSidebarBtn = document.getElementById('toggle-sidebar');
+            const examContent = document.getElementById('exam-content');
+            
             // عناصر الواجهة الأصلية
             const lectureTitle = document.getElementById('lecture-title');
             const progressBar = document.getElementById('progress-bar');
@@ -5306,7 +5454,7 @@
             const shareWhatsappBtn = document.getElementById('share-whatsapp');
             const backToLecturesBtn = document.getElementById('back-to-lectures');
 
-                        // أضف هذه المتغيرات مع بقية المتغيرات
+            // أضف هذه المتغيرات مع بقية المتغيرات
             const aboutUsBtn = document.getElementById('about-us-btn');
             const aboutUsContainer = document.getElementById('about-us-container');
             const backFromAboutBtn = document.getElementById('back-from-about');
@@ -5327,6 +5475,7 @@
             let countdownTime = testDuration * 60; // ثواني
             let immediateFeedback = true;
             let savedProgress = null;
+            let sidebarVisible = true;
             
             // تهيئة التطبيق
             function init() {
@@ -5381,6 +5530,81 @@
                 }
             }
             
+            // إنشاء قائمة الأسئلة الجانبية
+            function createQuestionsSidebar() {
+                questionsList.innerHTML = '';
+                
+                currentQuestions.forEach((question, index) => {
+                    const questionItem = document.createElement('div');
+                    questionItem.className = 'question-item';
+                    questionItem.textContent = index + 1;
+                    questionItem.dataset.index = index;
+                    
+                    // تمييز السؤال الحالي
+                    if (index === currentQuestionIndex) {
+                        questionItem.classList.add('current');
+                    }
+                    
+                    // تمييز الأسئلة التي تمت الإجابة عليها
+                    if (userAnswers[index] !== null) {
+                        const isCorrect = userAnswers[index] === question.answer;
+                        questionItem.classList.add(isCorrect ? 'answered' : 'answered-incorrect');
+                    }
+                    
+                    questionItem.addEventListener('click', function() {
+                        navigateToQuestion(parseInt(this.dataset.index));
+                    });
+                    
+                    questionsList.appendChild(questionItem);
+                });
+            }
+            
+            // التنقل إلى سؤال معين
+            function navigateToQuestion(index) {
+                if (index >= 0 && index < currentQuestions.length) {
+                    currentQuestionIndex = index;
+                    loadQuestion();
+                    updateProgress();
+                    updateNavigation();
+                    updateQuestionsSidebar();
+                }
+            }
+            
+            // تحديث القائمة الجانبية للأسئلة
+            function updateQuestionsSidebar() {
+                const questionItems = questionsList.querySelectorAll('.question-item');
+                
+                questionItems.forEach((item, index) => {
+                    item.classList.remove('current');
+                    
+                    if (index === currentQuestionIndex) {
+                        item.classList.add('current');
+                    }
+                    
+                    // تحديث حالة الإجابة
+                    if (userAnswers[index] !== null) {
+                        const isCorrect = userAnswers[index] === currentQuestions[index].answer;
+                        item.classList.remove('answered', 'answered-incorrect');
+                        item.classList.add(isCorrect ? 'answered' : 'answered-incorrect');
+                    }
+                });
+            }
+            
+            // إظهار/إخفاء القائمة الجانبية
+            function toggleSidebar() {
+                sidebarVisible = !sidebarVisible;
+                
+                if (sidebarVisible) {
+                    questionsSidebar.style.display = 'block';
+                    examContent.classList.remove('full-width');
+                    toggleSidebarBtn.textContent = '☰';
+                } else {
+                    questionsSidebar.style.display = 'none';
+                    examContent.classList.add('full-width');
+                    toggleSidebarBtn.textContent = '☰';
+                }
+            }
+            
             // استئناف الاختبار
             function resumeTest() {
                 if (!savedProgress) return;
@@ -5413,6 +5637,9 @@
                 if (timerInterval) clearInterval(timerInterval);
                 timerInterval = setInterval(updateTimer, 1000);
                 updateTimer();
+                
+                // إنشاء القائمة الجانبية
+                createQuestionsSidebar();
                 
                 loadQuestion();
                 updateProgress();
@@ -5523,7 +5750,6 @@
                 }
             }
 
-
             // دالة لإنشاء اختبار عشوائي من محاضرات محددة
             function setupCustomTestFromSelectedLectures(questionCount, selectedLectures) {
                 // جمع الأسئلة من المحاضرات المحددة فقط
@@ -5563,6 +5789,9 @@
                 examContainer.style.display = 'block';
                 resultsContainer.style.display = 'none';
                 
+                // إنشاء القائمة الجانبية
+                createQuestionsSidebar();
+                
                 loadQuestion();
                 updateProgress();
                 updateNavigation();
@@ -5579,11 +5808,7 @@
                 });
                 return selected;
             }
-
-
             
-            // إنشاء اختبار عشوائي
-
             // Set up exam for selected lecture
             function setupExam(lecture) {
                 isCustomTest = false;
@@ -5605,6 +5830,9 @@
                 lectureSelection.style.display = 'none';
                 examContainer.style.display = 'block';
                 resultsContainer.style.display = 'none';
+                
+                // إنشاء القائمة الجانبية
+                createQuestionsSidebar();
                 
                 loadQuestion();
                 updateProgress();
@@ -5747,6 +5975,9 @@
                 
                 // Enable next button after selecting an answer
                 nextBtn.disabled = false;
+                
+                // تحديث القائمة الجانبية
+                updateQuestionsSidebar();
                 
                 // Save progress
                 saveProgress();
@@ -5997,6 +6228,9 @@
                 achievementsPanel.style.display = 'block';
             });
             
+            // حدث إظهار/إخفاء القائمة الجانبية
+            toggleSidebarBtn.addEventListener('click', toggleSidebar);
+            
             // الانتقال إلى قسم المحاضرات
             startLecturesBtn.addEventListener('click', function() {
                 welcomeScreen.style.display = 'none';
@@ -6020,9 +6254,7 @@
                 welcomeScreen.style.display = 'flex';
             });
 
-
-
-                        // حدث زر About Us
+            // حدث زر About Us
             aboutUsBtn.addEventListener('click', function() {
                 welcomeScreen.style.display = 'none';
                 lectureSelection.style.display = 'none';
@@ -6069,7 +6301,6 @@
                 isCustomTest = true;
                 setupCustomTestFromSelectedLectures(questionCount, selectedLectures);
             });
-
             
             // Click events for lecture buttons
             document.querySelectorAll('.lecture-btn').forEach(button => {
@@ -6086,6 +6317,7 @@
                     loadQuestion();
                     updateProgress();
                     updateNavigation();
+                    updateQuestionsSidebar();
                 }
             });
             
@@ -6095,6 +6327,7 @@
                     loadQuestion();
                     updateProgress();
                     updateNavigation();
+                    updateQuestionsSidebar();
                 } else {
                     showResults();
                 }
@@ -6139,6 +6372,9 @@
                 // Update UI
                 resultsContainer.style.display = 'none';
                 examContainer.style.display = 'block';
+                
+                // إنشاء القائمة الجانبية
+                createQuestionsSidebar();
                 
                 loadQuestion();
                 updateProgress();
