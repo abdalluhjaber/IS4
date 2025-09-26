@@ -897,20 +897,7 @@
             20%, 40%, 60%, 80% { transform: translateX(10px); }
         }
         
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            background: linear-gradient(45deg, #4facfe, #00f2fe, #fad0c4, #ff9a9e);
-            opacity: 0;
-            z-index: 1000;
-            animation: confettiFall 3s ease-in-out forwards;
-        }
-        
-        @keyframes confettiFall {
-            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
-        }
+
         
         /* أنماط القائمة الجانبية للأسئلة - محسنة للشاشات الصغيرة */
         /* أنماط القائمة الجانبية للأسئلة - على اليمين */
@@ -1187,6 +1174,9 @@
             }
         }
 
+
+
+
         /* وسائط متجاوبة إضافية */
         @media (max-width: 768px) {
             .about-us-content {
@@ -1246,20 +1236,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         
-        .firework {
-            position: fixed;
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 1000;
-            animation: fireworkExplode 1s ease-out forwards;
-        }
-        
-        @keyframes fireworkExplode {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(20); opacity: 0; }
-        }
+
         
         .stats-chart {
             width: 100%;
@@ -1483,6 +1460,61 @@
         
         body.dark-mode .welcome-modal-content {
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+                /* تأثير الاهتزاز */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        /* تحسينات على تأثير القصاصات الورقية */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            opacity: 1;
+            border-radius: 2px; /* شكل قصاصة الورق */
+            z-index: 10000;
+            pointer-events: none;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* تأثيرات إضافية للألعاب النارية */
+        .firework {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            animation: fireworkExplode 1s ease-out forwards;
+        }
+
+        @keyframes fireworkExplode {
+            0% { 
+                transform: scale(1); 
+                opacity: 1; 
+            }
+            100% { 
+                transform: scale(15); 
+                opacity: 0; 
+            }
         }
     </style>
 </head>
@@ -6313,27 +6345,58 @@
                 }
             }
             
-            // Create confetti effect
-            function createConfetti() {
-                for (let i = 0; i < 100; i++) {
-                    const confetti = document.createElement('div');
-                    confetti.className = 'confetti';
-                    confetti.style.left = Math.random() * 100 + 'vw';
-                    confetti.style.width = Math.random() * 10 + 5 + 'px';
-                    confetti.style.height = Math.random() * 10 + 5 + 'px';
-                    confetti.style.background = `linear-gradient(45deg, 
-                        hsl(${Math.random() * 360}, 100%, 50%), 
-                        hsl(${Math.random() * 360}, 100%, 50%))`;
-                    confetti.style.animationDelay = Math.random() * 2 + 's';
-                    document.body.appendChild(confetti);
-                    
+                                    // Create confetti effect
+                      // دالة محسنة لإنشاء قصاصات ورقية
+            function createConfetti(count = 100) {
+                for (let i = 0; i < count; i++) {
                     setTimeout(() => {
-                        confetti.remove();
-                    }, 3000);
+                        const confetti = document.createElement('div');
+                        confetti.className = 'confetti';
+                        
+                        // ألوان متنوعة للقصاصات الورقية
+                        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+                        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                        
+                        // أحجام وأشكال عشوائية
+                        const size = Math.random() * 10 + 5;
+                        confetti.style.width = size + 'px';
+                        confetti.style.height = size + 'px';
+                        
+                        // مواضع بدء عشوائية
+                        confetti.style.left = Math.random() * 100 + 'vw';
+                        confetti.style.top = '-10px';
+                        
+                        // زوايا دوران عشوائية
+                        const rotation = Math.random() * 360;
+                        confetti.style.transform = `rotate(${rotation}deg)`;
+                        
+                        // مدة وسرعة سقوط عشوائية
+                        const duration = Math.random() * 2 + 0.5;
+                        const delay = Math.random() * 0.5;
+                        
+                        confetti.style.animation = `confettiFall ${duration}s ease-in ${delay}s forwards`;
+                        
+                        document.body.appendChild(confetti);
+                        
+                        // إزالة العنصر بعد انتهاء التحريك
+                        setTimeout(() => {
+                            if (confetti.parentNode) {
+                                confetti.parentNode.removeChild(confetti);
+                            }
+                        }, (duration + delay) * 1000);
+                    }, i * 20);
                 }
             }
-            
-            // Select an option
+
+            // دالة لإضافة تأثير الاهتزاز
+            function shakeElement(element) {
+                element.classList.add('shake');
+                setTimeout(() => {
+                    element.classList.remove('shake');
+                }, 500);
+            }
+
+            // تعديل دالة selectOption لإضافة التأثيرات
             function selectOption(value) {
                 answered = true;
                 userAnswers[currentQuestionIndex] = value;
@@ -6350,9 +6413,22 @@
                 // Apply visual effects
                 if (isCorrect) {
                     document.querySelector(`input[value="${value}"]`).parentElement.classList.add('correct-answer');
+                    
+                    // إطلاق القصاصات الورقية للإجابة الصحيحة
+                    createConfetti(150); // زيادة عدد القصاصات
+                    
+                    // يمكن إضافة تأثيرات إضافية مثل الألعاب النارية إذا رغبت
                     createFireworks();
                 } else {
-                    document.querySelector(`input[value="${value}"]`).parentElement.classList.add('incorrect-answer');
+                    const selectedOption = document.querySelector(`input[value="${value}"]`).parentElement;
+                    selectedOption.classList.add('incorrect-answer');
+                    
+                    // تطبيق تأثير الاهتزاز على الخيار المختار
+                    shakeElement(selectedOption);
+                    
+                    // تطبيق تأثير اهتزاز خفيف على حاوية السؤال بأكملها
+                    shakeElement(document.querySelector('.question-container'));
+                    
                     // Show correct answer
                     document.querySelector(`input[value="${question.answer}"]`).parentElement.classList.add('correct-answer');
                 }
