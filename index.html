@@ -96,6 +96,7 @@
             cursor: pointer;
             font-size: 0.9rem;
             transition: all 0.2s;
+            position: relative;
         }
 
         .question-number:hover {
@@ -119,6 +120,22 @@
             background-color: var(--incorrect-color);
             color: white;
             border-color: var(--incorrect-color);
+        }
+
+        .question-number.skipped::after {
+            content: "!";
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #f39c12;
+            color: white;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .main-content {
@@ -187,6 +204,23 @@
             font-weight: bold;
         }
 
+        .timer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .timer {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
         .progress-container {
             margin-bottom: 25px;
         }
@@ -220,6 +254,21 @@
             margin-bottom: 20px;
             position: relative;
             overflow: hidden;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .question-category {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
         }
 
         .question-text {
@@ -382,6 +431,16 @@
             transform: translateY(-2px);
         }
 
+        .btn-warning {
+            background-color: #f39c12;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background-color: #e67e22;
+            transform: translateY(-2px);
+        }
+
         .btn:disabled {
             background-color: #95a5a6;
             cursor: not-allowed;
@@ -448,6 +507,27 @@
             border-radius: 8px;
         }
 
+        .review-notes {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--background-color);
+            border-radius: 8px;
+            text-align: right;
+        }
+
+        .review-notes h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .review-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: var(--card-bg);
+            border-radius: 5px;
+            border-right: 3px solid var(--primary-color);
+        }
+
         /* تأثيرات الكونفيتي */
         .confetti {
             position: fixed;
@@ -474,7 +554,6 @@
             direction: ltr;
             text-align: left;
         }
-
 
         @keyframes confetti-fall {
             0% {
@@ -574,6 +653,17 @@
             </div>
         </div>
 
+        <div class="timer-container">
+            <div>
+                <h3>الوقت المستغرق</h3>
+                <div class="timer" id="timer">00:00</div>
+            </div>
+            <div>
+                <h3>الوقت لكل سؤال</h3>
+                <div class="timer" id="question-timer">00:00</div>
+            </div>
+        </div>
+
         <div class="progress-container">
             <div class="progress-bar">
                 <div class="progress" id="progress-bar"></div>
@@ -585,6 +675,10 @@
         </div>
 
         <div class="question-container">
+            <div class="question-header">
+                <div class="question-category" id="question-category"></div>
+                <div class="question-timer" id="question-timer-display"></div>
+            </div>
             <div class="question-text" id="question-text"></div>
             <div class="options-container" id="options-container">
                 <!-- سيتم ملء الخيارات هنا ديناميكياً -->
@@ -593,6 +687,9 @@
             <div class="buttons-container">
                 <button class="btn btn-secondary" id="prev-btn">
                     <i class="fas fa-arrow-right"></i> السابق
+                </button>
+                <button class="btn btn-warning" id="skip-btn">
+                    <i class="fas fa-forward"></i> تخطي
                 </button>
                 <button class="btn btn-primary" id="next-btn">
                     التالي <i class="fas fa-arrow-left"></i>
@@ -609,6 +706,12 @@
             <div class="category-results" id="category-results">
                 <!-- سيتم ملء نتائج الفئات هنا ديناميكياً -->
             </div>
+            
+            <div class="review-notes" id="review-notes">
+                <h3>ملاحظات المراجعة</h3>
+                <!-- سيتم ملء ملاحظات المراجعة هنا ديناميكياً -->
+            </div>
+            
             <button class="btn btn-primary" id="restart-btn" style="margin-top: 20px;">
                 <i class="fas fa-redo"></i> إعادة الاختبار
             </button>
@@ -617,7 +720,7 @@
 
     <script>
         // بيانات الأسئلة الكاملة
-         const questions = [
+          const questions = [
             // Cluster Storage and Computing
             {
                 category: "Cluster Storage and Computing",
@@ -2436,14 +2539,21 @@
         let answeredQuestions = 0;
         let userAnswers = new Array(questions.length).fill(null);
         let isDarkMode = false;
+        let startTime = new Date();
+        let questionStartTime = new Date();
+        let timerInterval;
+        let questionTimerInterval;
+        let shuffledQuestions = [];
 
         // عناصر DOM
         const questionsList = document.getElementById('questions-list');
+        const questionCategory = document.getElementById('question-category');
         const questionText = document.getElementById('question-text');
         const optionsContainer = document.getElementById('options-container');
         const feedback = document.getElementById('feedback');
         const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
+        const skipBtn = document.getElementById('skip-btn');
         const answeredCount = document.getElementById('answered-count');
         const correctCount = document.getElementById('correct-count');
         const percentage = document.getElementById('percentage');
@@ -2455,17 +2565,26 @@
         const scoreText = document.getElementById('score-text');
         const resultMessage = document.getElementById('result-message');
         const categoryResults = document.getElementById('category-results');
+        const reviewNotes = document.getElementById('review-notes');
         const restartBtn = document.getElementById('restart-btn');
+        const timer = document.getElementById('timer');
+        const questionTimerDisplay = document.getElementById('question-timer');
+        const questionTimerElement = document.getElementById('question-timer-display');
 
         // تهيئة التطبيق
         function init() {
+            // نسخ الأسئلة الأصلية وخلط الخيارات فقط
+            shuffledQuestions = questions.map(question => shuffleQuestionOptions(question));
+            
             createQuestionNumbers();
             updateStats();
             displayQuestion();
+            startTimers();
             
             // إضافة المستمعين للأحداث
             prevBtn.addEventListener('click', goToPreviousQuestion);
             nextBtn.addEventListener('click', goToNextQuestion);
+            skipBtn.addEventListener('click', skipQuestion);
             themeToggle.addEventListener('click', toggleTheme);
             restartBtn.addEventListener('click', restartQuiz);
             
@@ -2476,11 +2595,72 @@
             }
         }
 
+        // خلط مصفوفة بشكل عشوائي (Fisher-Yates shuffle)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // خلط خيارات السؤال بشكل عشوائي
+        function shuffleQuestionOptions(question) {
+            // نسخ الخيارات والإجابة الصحيحة
+            const shuffledOptions = [...question.options];
+            const correctAnswer = question.correctAnswer;
+            
+            // حفظ الخيار الصحيح
+            const correctOption = shuffledOptions[correctAnswer];
+            
+            // خلط الخيارات
+            shuffleArray(shuffledOptions);
+            
+            // تحديث مؤشر الإجابة الصحيحة
+            const newCorrectAnswer = shuffledOptions.indexOf(correctOption);
+            
+            return {
+                ...question,
+                options: shuffledOptions,
+                correctAnswer: newCorrectAnswer,
+                originalCorrectAnswer: correctAnswer // حفظ الإجابة الأصلية للمراجعة
+            };
+        }
+
+        // بدء المؤقتات
+        function startTimers() {
+            // مؤقت الاختبار الكلي
+            timerInterval = setInterval(() => {
+                const now = new Date();
+                const diff = Math.floor((now - startTime) / 1000);
+                const minutes = Math.floor(diff / 60);
+                const seconds = diff % 60;
+                timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+            
+            // مؤقت السؤال الحالي
+            resetQuestionTimer();
+        }
+
+        // إعادة تعيين مؤقت السؤال
+        function resetQuestionTimer() {
+            clearInterval(questionTimerInterval);
+            questionStartTime = new Date();
+            
+            questionTimerInterval = setInterval(() => {
+                const now = new Date();
+                const diff = Math.floor((now - questionStartTime) / 1000);
+                const minutes = Math.floor(diff / 60);
+                const seconds = diff % 60;
+                questionTimerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
         // إنشاء أرقام الأسئلة في القائمة الجانبية
         function createQuestionNumbers() {
             questionsList.innerHTML = '';
             
-            questions.forEach((_, index) => {
+            shuffledQuestions.forEach((_, index) => {
                 const questionNumber = document.createElement('div');
                 questionNumber.className = 'question-number';
                 questionNumber.textContent = index + 1;
@@ -2496,25 +2676,30 @@
             const questionNumbers = document.querySelectorAll('.question-number');
             
             questionNumbers.forEach((number, index) => {
-                number.classList.remove('active', 'answered', 'incorrect');
+                number.classList.remove('active', 'answered', 'incorrect', 'skipped');
                 
                 if (index === currentQuestionIndex) {
                     number.classList.add('active');
                 }
                 
                 if (userAnswers[index] !== null) {
-                    if (userAnswers[index] === questions[index].correctAnswer) {
+                    if (userAnswers[index] === shuffledQuestions[index].correctAnswer) {
                         number.classList.add('answered');
                     } else {
                         number.classList.add('incorrect');
                     }
+                } else if (userAnswers[index] === 'skipped') {
+                    number.classList.add('skipped');
                 }
             });
         }
 
         // عرض السؤال الحالي
         function displayQuestion() {
-            const currentQuestion = questions[currentQuestionIndex];
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+            
+            // عرض فئة السؤال
+            questionCategory.textContent = currentQuestion.category;
             
             // عرض نص السؤال
             questionText.textContent = `${currentQuestionIndex + 1}. ${currentQuestion.question}`;
@@ -2537,33 +2722,49 @@
                 optionElement.appendChild(optionLetter);
                 optionElement.appendChild(optionText);
                 
-                if (userAnswers[currentQuestionIndex] === index) {
+                // إذا كان السؤال قد تمت الإجابة عليه مسبقًا، عرض النتيجة
+                if (userAnswers[currentQuestionIndex] !== null && userAnswers[currentQuestionIndex] !== 'skipped') {
+                    if (index === currentQuestion.correctAnswer) {
+                        optionElement.classList.add('correct');
+                    } else if (index === userAnswers[currentQuestionIndex]) {
+                        optionElement.classList.add('incorrect');
+                    }
+                } else if (userAnswers[currentQuestionIndex] === index) {
                     optionElement.classList.add('selected');
                     selectedOption = index;
-                    
-                    // إذا كان السؤال قد تمت الإجابة عليه مسبقًا، عرض النتيجة
-                    if (userAnswers[currentQuestionIndex] !== null) {
-                        checkAnswer();
-                    }
                 }
                 
                 optionElement.addEventListener('click', () => selectOption(index, optionElement));
                 optionsContainer.appendChild(optionElement);
             });
             
-            // مسح التعليقات السابقة
-            feedback.textContent = '';
-            feedback.className = 'feedback';
+            // عرض التعليق إذا كان السؤال قد تمت الإجابة عليه
+            if (userAnswers[currentQuestionIndex] !== null && userAnswers[currentQuestionIndex] !== 'skipped') {
+                const currentQuestion = shuffledQuestions[currentQuestionIndex];
+                if (userAnswers[currentQuestionIndex] === currentQuestion.correctAnswer) {
+                    feedback.textContent = `إجابة صحيحة! ${currentQuestion.explanation}`;
+                    feedback.className = 'feedback correct';
+                } else {
+                    feedback.textContent = `إجابة خاطئة. ${currentQuestion.explanation}`;
+                    feedback.className = 'feedback incorrect';
+                }
+            } else {
+                feedback.textContent = '';
+                feedback.className = 'feedback';
+            }
             
             // تحديث حالة الأزرار
             updateButtonStates();
             updateQuestionNumbers();
+            
+            // إعادة تعيين مؤقت السؤال
+            resetQuestionTimer();
         }
 
         // اختيار خيار
         function selectOption(index, element) {
             // إذا كان السؤال قد تمت الإجابة عليه مسبقًا، لا تفعل شيئًا
-            if (userAnswers[currentQuestionIndex] !== null) return;
+            if (userAnswers[currentQuestionIndex] !== null && userAnswers[currentQuestionIndex] !== 'skipped') return;
             
             // إزالة التحديد من جميع الخيارات
             const allOptions = document.querySelectorAll('.option');
@@ -2580,11 +2781,30 @@
             checkAnswer();
         }
 
+        // تخطي السؤال
+        function skipQuestion() {
+            if (userAnswers[currentQuestionIndex] === null) {
+                userAnswers[currentQuestionIndex] = 'skipped';
+                updateStats();
+                updateQuestionNumbers();
+                
+                // الانتقال تلقائيًا إلى السؤال التالي
+                if (currentQuestionIndex < shuffledQuestions.length - 1) {
+                    currentQuestionIndex++;
+                    selectedOption = null;
+                    displayQuestion();
+                } else {
+                    // إذا كان هذا آخر سؤال، عرض النتائج
+                    showResults();
+                }
+            }
+        }
+
         // التحقق من الإجابة
         function checkAnswer() {
             if (selectedOption === null) return;
             
-            const currentQuestion = questions[currentQuestionIndex];
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
             const allOptions = document.querySelectorAll('.option');
             
             // تمييز الإجابة الصحيحة والخاطئة
@@ -2625,7 +2845,7 @@
             updateQuestionNumbers();
             
             // إذا كانت هذه آخر سؤال، عرض النتائج
-            if (answeredQuestions === questions.length) {
+            if (answeredQuestions === shuffledQuestions.length) {
                 setTimeout(showResults, 1000);
             }
         }
@@ -2675,10 +2895,13 @@
 
         // الانتقال إلى السؤال التالي
         function goToNextQuestion() {
-            if (currentQuestionIndex < questions.length - 1) {
+            if (currentQuestionIndex < shuffledQuestions.length - 1) {
                 currentQuestionIndex++;
                 selectedOption = null;
                 displayQuestion();
+            } else {
+                // إذا كان هذا آخر سؤال، عرض النتائج
+                showResults();
             }
         }
 
@@ -2701,19 +2924,21 @@
         // تحديث حالة الأزرار
         function updateButtonStates() {
             prevBtn.disabled = currentQuestionIndex === 0;
-            nextBtn.disabled = currentQuestionIndex === questions.length - 1;
+            nextBtn.disabled = currentQuestionIndex === shuffledQuestions.length - 1;
+            skipBtn.disabled = userAnswers[currentQuestionIndex] !== null;
         }
 
         // تحديث الإحصائيات
         function updateStats() {
-            answeredCount.textContent = answeredQuestions;
+            const answered = userAnswers.filter(answer => answer !== null && answer !== 'skipped').length;
+            answeredCount.textContent = answered;
             correctCount.textContent = score;
             
-            const progressPercentage = (answeredQuestions / questions.length) * 100;
+            const progressPercentage = (answered / shuffledQuestions.length) * 100;
             progressBar.style.width = `${progressPercentage}%`;
             progressText.textContent = `${Math.round(progressPercentage)}%`;
             
-            const accuracyPercentage = answeredQuestions > 0 ? (score / answeredQuestions) * 100 : 0;
+            const accuracyPercentage = answered > 0 ? (score / answered) * 100 : 0;
             percentage.textContent = `${Math.round(accuracyPercentage)}%`;
         }
 
@@ -2744,10 +2969,13 @@
 
         // عرض النتائج
         function showResults() {
+            clearInterval(timerInterval);
+            clearInterval(questionTimerInterval);
+            
             document.querySelector('.question-container').style.display = 'none';
             resultsContainer.style.display = 'block';
             
-            const finalPercentage = (score / questions.length) * 100;
+            const finalPercentage = (score / shuffledQuestions.length) * 100;
             scoreText.textContent = `${Math.round(finalPercentage)}%`;
             scoreCircle.style.background = `conic-gradient(var(--primary-color) ${finalPercentage}%, var(--border-color) ${finalPercentage}%)`;
             
@@ -2764,7 +2992,7 @@
             
             // نتائج الفئات
             const categories = {};
-            questions.forEach((question, index) => {
+            shuffledQuestions.forEach((question, index) => {
                 if (!categories[question.category]) {
                     categories[question.category] = {
                         total: 0,
@@ -2794,6 +3022,39 @@
                 
                 categoryResults.appendChild(categoryResult);
             }
+            
+            // ملاحظات المراجعة
+            generateReviewNotes();
+        }
+
+        // إنشاء ملاحظات المراجعة
+        function generateReviewNotes() {
+            reviewNotes.innerHTML = '<h3>ملاحظات المراجعة</h3>';
+            
+            shuffledQuestions.forEach((question, index) => {
+                if (userAnswers[index] !== question.correctAnswer && userAnswers[index] !== 'skipped') {
+                    const reviewItem = document.createElement('div');
+                    reviewItem.className = 'review-item';
+                    
+                    // العثور على الإجابة الأصلية الصحيحة
+                    const originalCorrectAnswer = questions[index].options[questions[index].correctAnswer];
+                    
+                    reviewItem.innerHTML = `
+                        <p><strong>سؤال ${index + 1}:</strong> ${question.question}</p>
+                        <p><strong>إجابتك:</strong> ${question.options[userAnswers[index]]}</p>
+                        <p><strong>الإجابة الصحيحة:</strong> ${originalCorrectAnswer}</p>
+                        <p><strong>التوضيح:</strong> ${question.explanation}</p>
+                    `;
+                    
+                    reviewNotes.appendChild(reviewItem);
+                }
+            });
+            
+            if (reviewNotes.children.length === 1) {
+                const noNotes = document.createElement('p');
+                noNotes.textContent = 'لا توجد أخطاء تحتاج إلى مراجعة. أحسنت!';
+                reviewNotes.appendChild(noNotes);
+            }
         }
 
         // إعادة الاختبار
@@ -2802,12 +3063,20 @@
             selectedOption = null;
             score = 0;
             answeredQuestions = 0;
-            userAnswers = new Array(questions.length).fill(null);
+            userAnswers = new Array(shuffledQuestions.length).fill(null);
+            
+            // إعادة خلط خيارات الأسئلة فقط
+            shuffledQuestions = questions.map(question => shuffleQuestionOptions(question));
+            
+            // إعادة تعيين المؤقتات
+            startTime = new Date();
+            resetQuestionTimer();
             
             document.querySelector('.question-container').style.display = 'block';
             resultsContainer.style.display = 'none';
             
             updateStats();
+            createQuestionNumbers();
             displayQuestion();
         }
 
